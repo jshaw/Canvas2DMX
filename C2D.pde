@@ -93,7 +93,7 @@ public class C2D implements Runnable
   // (x,y) is the center of the strip.
   void ledStrip(int index, int count, float x, float y, float spacing, float angle, boolean reversed)
   {
-    println("LEDSTRIP");
+    //println("LEDSTRIP");
     float s = sin(angle);
     float c = cos(angle);
     for (int i = 0; i < count; i++) {
@@ -396,8 +396,8 @@ public class C2D implements Runnable
   public byte[] writePixels()
   {
 
-    // print("packetData: ");
-    // println(packetData);
+     //print("packetData: ");
+     //println(packetData);
 
     if (packetData == null || packetData.length == 0) {
       // No pixel buffer
