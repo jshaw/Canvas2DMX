@@ -19,6 +19,10 @@
  */
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.IOException;
 
 class Canvas2Dmx {
   int[] pixelLocations;
@@ -86,12 +90,28 @@ class Canvas2Dmx {
 
   // Set the location of a single LED on the canvas
   void setLed(int index, int x, int y) {
+    // Initialize array with proper size
     if (pixelLocations == null) {
-      pixelLocations = new int[index + 1];
+      pixelLocations = new int[(index + 1) * 2]; // Give it some room to grow
+      // Initialize all positions to -1 (invalid)
+      Arrays.fill(pixelLocations, -1);
     } else if (index >= pixelLocations.length) {
-      pixelLocations = Arrays.copyOf(pixelLocations, index + 1);
+      int oldLength = pixelLocations.length;
+      pixelLocations = Arrays.copyOf(pixelLocations, (index + 1) * 2);
+      // Initialize new positions to -1
+      Arrays.fill(pixelLocations, oldLength, pixelLocations.length, -1);
     }
-    pixelLocations[index] = x + width * y;
+    
+    // Bounds checking for canvas coordinates
+    x = constrain(x, 0, width - 1);
+    y = constrain(y, 0, height - 1);
+    
+    int pixelIndex = x + width * y;
+    pixelLocations[index] = pixelIndex;
+    
+    // Debug output - let's see what's happening
+    println("setLed(" + index + ", " + x + ", " + y + ") -> pixel[" + pixelIndex + "]");
+    println("  Reverse check: pixel[" + pixelIndex + "] = (" + (pixelIndex % width) + ", " + (pixelIndex / width) + ")");
   }
 
   // Map a strip of LEDs on the canvas
@@ -139,37 +159,98 @@ class Canvas2Dmx {
     for (int i = 0; i < 4; i++) {
       float rotatedX = x + xOffsets[i] * cos(angle) - yOffsets[i] * sin(angle);
       float rotatedY = y + xOffsets[i] * sin(angle) + yOffsets[i] * cos(angle);
-      setLed(index + i, (int)rotatedX, (int)rotatedY);
+      // Added rounding
+      setLed(index + i, (int)(rotatedX + 0.5), (int)(rotatedY + 0.5));
     }
   }
 
   // Extract pixel colors from the canvas, apply response curve, and return as an array
-  color[] getLedColors() {
-    color[] colors = new color[pixelLocations.length];
-    loadPixels();
-  
+  color[] getLedColors(color[] pixelArray) {
+    if (pixelLocations == null) {
+      println("Warning: No LEDs mapped!");
+      return new color[0];
+    }
+    
+    // Count valid LED locations
+    int validLeds = 0;
     for (int i = 0; i < pixelLocations.length; i++) {
-      if (pixelLocations[i] >= 0 && pixelLocations[i] < pixels.length) {
-        colors[i] = applyResponse(pixels[pixelLocations[i]]);
-      } else {
-        colors[i] = color(0); // Default to black or some safe color
-        println("Warning: Pixel location out of bounds for LED " + i);
+      if (pixelLocations[i] >= 0) {
+        validLeds = i + 1; // Track the highest valid index + 1
       }
+    }
+    
+    color[] colors = new color[validLeds];
   
-      if (enableShowLocations) {
-        int y = pixelLocations[i] / width;
-        int x = pixelLocations[i] % width;
-  
-        noStroke();
-        //fill(255, 255, 0, 150); // Semi-transparent yellow
-        fill(0); // Semi-transparent yellow
-        rect(x - 2, y - 2, 2, 2);
+    for (int i = 0; i < validLeds; i++) {
+      if (pixelLocations[i] >= 0 && pixelLocations[i] < pixelArray.length) {
+        color rawColor = pixelArray[pixelLocations[i]];
+        color processedColor = applyResponse(rawColor);
+        colors[i] = processedColor;
         
-        //println("in show locations");
+        // Debug: print what we're actually sampling - BOTH raw and processed
+        if (frameCount % 30 == 0 && i < 2) { // Debug first 2 LEDs every 30 frames
+          int x = pixelLocations[i] % width;
+          int y = pixelLocations[i] / width;
+          println("LED " + i + " at (" + x + "," + y + "):");
+          println("  RAW: R=" + red(rawColor) + " G=" + green(rawColor) + " B=" + blue(rawColor));
+          println("  PROCESSED: R=" + red(processedColor) + " G=" + green(processedColor) + " B=" + blue(processedColor));
+        }
+      } else {
+        colors[i] = color(0); // Default to black for invalid locations
+        if (pixelLocations[i] >= 0) { // Only warn for initialized but out-of-bounds locations
+          println("Warning: Pixel location out of bounds for LED " + i + " (location: " + pixelLocations[i] + ")");
+        }
       }
     }
   
     return colors;
+  }
+  
+  // Keep the old method for backward compatibility, but call loadPixels() here
+  color[] getLedColors() {
+    loadPixels(); // This might work better when called from within the class context
+    return getLedColors(pixels);
+  }
+  
+  // Simple method to draw LED location markers AFTER getting colors
+  void showLedLocations() {
+    if (!enableShowLocations || pixelLocations == null) return;
+    
+    // Count valid LED locations
+    int validLeds = 0;
+    for (int i = 0; i < pixelLocations.length; i++) {
+      if (pixelLocations[i] >= 0) {
+        validLeds = i + 1;
+      }
+    }
+    
+    // Save current drawing state
+    pushStyle();
+    
+    // Draw on top of the current scene
+    for (int i = 0; i < validLeds; i++) {
+      if (pixelLocations[i] >= 0 && pixelLocations[i] < pixels.length) {
+        int y = pixelLocations[i] / width;
+        int x = pixelLocations[i] % width;
+  
+        // Draw marker
+        //fill(255, 255, 0); // Bright yellow
+        noFill();
+        //noStroke();
+        stroke(255, 255, 0);
+        strokeWeight(1);
+        ellipse(x - 3, y - 3, 6, 6);
+        
+        // Add LED index number
+        fill(0);
+        textAlign(CENTER, CENTER);
+        textSize(10);
+        text(i, x+4, y+4);
+      }
+    }
+    
+    // Restore drawing state
+    popStyle();
   }
   
   // Method to set the DMX channel pattern
@@ -187,8 +268,19 @@ class Canvas2Dmx {
     defaultValues.put(channel, value);
   }
 
-void sendToDmx(DMXControl dmxController) {
+  // Send colors to DMX controller
+  void sendToDmx(DMXControl dmxController) {
+    if (dmxController == null) {
+      println("Warning: DMX controller is null");
+      return;
+    }
+    
     color[] colors = getLedColors();
+    if (colors.length == 0) {
+      println("Warning: No LED colors to send to DMX");
+      return;
+    }
+    
     int dmxChannelIndex = startAt;
 
     for (int i = 0; i < colors.length; i++) {
@@ -220,6 +312,11 @@ void sendToDmx(DMXControl dmxController) {
         }
       }
     }
+    
+    // Debug output occasionally
+    if (frameCount % 120 == 0) { // Every 2 seconds at 60fps
+      println("Sent " + colors.length + " LEDs to DMX starting at channel " + startAt);
+    }
   }
 
   // Save the current settings to a file
@@ -239,29 +336,49 @@ void sendToDmx(DMXControl dmxController) {
   void loadSettings(String filename) {
     BufferedReader reader = createReader(filename);
     try {
-      response = Float.parseFloat(reader.readLine());
-      temperature = Float.parseFloat(reader.readLine());
+      String line;
+      if ((line = reader.readLine()) != null) {
+        response = Float.parseFloat(line);
+      }
+      if ((line = reader.readLine()) != null) {
+        temperature = Float.parseFloat(line);
+      }
 
       ArrayList<Float> curveList = new ArrayList<>();
-      String line;
       while ((line = reader.readLine()) != null) {
         curveList.add(Float.parseFloat(line));
       }
-      customCurve = new float[curveList.size()];
-      for (int i = 0; i < curveList.size(); i++) {
-        customCurve[i] = curveList.get(i);
+      
+      if (curveList.size() > 0) {
+        customCurve = new float[curveList.size()];
+        for (int i = 0; i < curveList.size(); i++) {
+          customCurve[i] = curveList.get(i);
+        }
       }
+      reader.close();
     } catch (IOException e) {
-      e.printStackTrace();
+      println("Error loading settings: " + e.getMessage());
+    } catch (NumberFormatException e) {
+      println("Error parsing settings file: " + e.getMessage());
     }
   }
 
   // Visualization method to see how settings will affect the colors
   void visualize(color[] rgbArray) {
-    for (int i = 0; i < rgbArray.length; i++) {
-      color adjustedColor = applyResponse(rgbArray[i]);
+    pushStyle(); // Save current drawing style
+    
+    for (int i = 0; i < rgbArray.length && i < 20; i++) { // Limit to 20 for screen space
+      color adjustedColor = rgbArray[i]; // Color is already processed by getLedColors()
       fill(adjustedColor);
-      rect(50 + i * 30, 50, 20, 20); // Visualize each color in a rectangle
+      noStroke();
+      rect(10 + i * 15, height - 30, 12, 20); // Visualize each color in a rectangle
+      
+      // Add LED number
+      fill(255);
+      textSize(6);
+      text(i, 10 + i * 15 + 1, height - 12);
     }
+    
+    popStyle(); // Restore drawing style
   }
 }
