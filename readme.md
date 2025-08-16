@@ -258,5 +258,5 @@ c2d.setCustomCurve(customCurve);
 
 ## 📜 License
 
-MIT License © 2025 [Studio Jordan Shaw](https://www.jordanshaw.com/) by Micah Elizabeth Scott 
+MIT License © 2025 [Studio Jordan Shaw](https://www.jordanshaw.com/)
 
