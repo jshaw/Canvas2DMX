@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    env:
+      FULL_RELEASE_TAG: ${{ github.ref || format('{0}{1}', 'refs/tags/', github.event.release.tag_name) }}
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: 8.5
+      - name: Extract tag name
+        run: |
+          echo "RELEASE_TAG=${FULL_RELEASE_TAG:10}"
+          echo "RELEASE_TAG=${FULL_RELEASE_TAG:10}" >> $GITHUB_ENV
+      - name: Build with Gradle
+        id: build
+        run: gradle -PgithubReleaseTag=${{ env.RELEASE_TAG }} buildReleaseArtifacts
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release/*.txt
+            release/*.zip
+            release/*.pdex

@@ -1,316 +1,262 @@
-# Canvas2Dmx: A DMX Control Library for Processing
+# Canvas2DMX: Map Processing Canvases to DMX
 
-`Canvas2Dmx` is a flexible DMX control library for Processing that allows you to map pixel colors from a canvas to DMX channels, with support for customizable channel patterns and additional channel data. Inspired by the [FadeCandy](https://github.com/scanlime/fadecandy) and [Open Pixel Control (OPC)](https://github.com/scanlime/fadecandy/tree/master/examples/Processing) libraries created by Micah Elizabeth Scott, this library extends the ability to pull colors from Processing sketches and map them to DMX fixtures, providing support for various fixture types and channel configurations.
+![Canvas2DMX demo image](docs/_img/canvas2DMX_screenshot.jpg)
 
-## Features
+**Canvas2DMX** is a Processing library for mapping pixels from your sketch directly to DMX fixtures.  
+It lets you define LED mappings (strips, grids, rings, corners), apply color correction, and send data to any DMX backend (ENTTEC, SP201E, DMX4Artists, or your own).
 
-- **Real-time color sampling** from Processing canvas to DMX fixtures
-- **Custom Channel Patterns**: Specify how RGB data is packed into DMX channels (e.g., `"rgb"`, `"drgbsc"`, `"xrgbxxx"`, etc.)
-- **Dynamic Start Index**: Start sending DMX data from any specified channel index
-- **Default Channel Values**: Set default values for channels that aren't used for RGB (e.g., intensity, white balance, strobe control)
-- **Multiple LED mapping patterns** (strips, rings, grids, corners, individual LEDs)
-- **Response and Color Correction**: Apply gamma correction and temperature adjustments to colors before sending to DMX fixtures
-- **Interactive debugging tools** with visual LED position markers and real-time color feedback
-- **Visualization**: Visualize the pixel colors on the Processing canvas with configurable marker sizes
-- **Support for Various Color Models**: Expandable support for RGB, RGBA, RGBW, and more
-- **Support for ENTTEC USB Pro and compatible DMX controllers**
+Inspired by [FadeCandy](https://github.com/scanlime/fadecandy) and [Open Pixel Control (OPC)](https://github.com/scanlime/fadecandy/tree/master/examples/Processing) by Micah Elizabeth Scott.
 
-## Requirements
+---
 
-- **Processing 4.x**
-- **DMX4Artists library** by Jayson-H
-- **Compatible DMX controller** (ENTTEC USB Pro, SP201E, etc.)
-- **macOS/Windows/Linux** with USB DMX adapter
+## ✨ Features
 
-## Installation
+- Real-time **color sampling** from Processing canvas
+- Flexible **LED mapping**: strips, rings, grids, single points, square corners
+- **Custom DMX channel patterns** (e.g. `"rgb"`, `"drgb"`, `"drgbsc"`)
+- **Default channel values** for dimmer, strobe, color wheel, etc.
+- **Gamma correction** and **color temperature adjustment**
+- Built-in **visualization** (color bars, LED markers)
+- **Agnostic DMX output**: works with DMX4Artists, ENTTEC, SP201E, or any controller via a simple callback
+- Ships with **examples** from beginner to interactive
 
-1. **Install the DMX4Artists library** in Processing:
-   - Sketch → Import Library → Add Library
-   - Search for "DMX4Artists" and install
+---
 
-2. **Download and add the C2D.java file** to your sketch folder
+## 🎥 Demo Video
 
-3. **Connect your DMX controller** via USB
+[![Watch the demo](docs/_img/canvas2DMX_screenshot.jpg)](https://youtu.be/-gsM0a_rsXs?si=MXuY8Hiy-LBkyAh_)
 
-4. **Important**: Add `pixelDensity(1);` in your `setup()` function to ensure proper color sampling on high-DPI displays
+> Click the thumbnail above to watch Canvas2DMX in action on YouTube.
 
-## Basic Usage
+---
 
-Here is an example of how to use the `Canvas2Dmx` class in your Processing sketch:
+## 📦 Installation
+
+1. Download the library release and unzip into your `Processing/libraries/` folder.  
+   (After publishing, you’ll be able to install via **Sketch → Import Library → Add Library…**)  
+
+2. Restart Processing. The library will appear under **Sketch → Import Library → Canvas2DMX**.  
+
+3. Explore the included examples via  
+   **File → Examples → Contributed Libraries → Canvas2DMX**.  
+
+---
+
+## 🚀 Basic Usage
 
 ```java
+import io.studiojordanshaw.canvas2dmx.*;
 import com.jaysonh.dmx4artists.*;
 
-Canvas2Dmx canvas2Dmx;
-DMXControl dmxController;
+Canvas2DMX c2d;
+DMXControl dmx;
 
 void setup() {
-  size(400, 400);
-  pixelDensity(1); // Essential for proper color sampling on high-DPI displays
-  
-  canvas2Dmx = new Canvas2Dmx();
-  
-  // Initialize DMX controller
+  size(400, 200);
+  pixelDensity(1); // important for accurate color sampling on HiDPI screens
+
+  c2d = new Canvas2DMX(this);
+  c2d.mapLedStrip(0, 8, width/2f, height/2f, 40, 0, false);
+
+  c2d.setChannelPattern("drgb");   // Dimmer + RGB
+  c2d.setDefaultValue('d', 255);   // Dimmer full
+  c2d.setStartAt(1);               // Start at DMX channel 1
+
   try {
-    dmxController = new DMXControl(0, 512); // Device index 0, 512 channels
-    println("DMX controller initialized");
+    dmx = new DMXControl(0, 512);  // connect to first available DMX device
   } catch (Exception e) {
-    println("DMX initialization failed: " + e.getMessage());
-    dmxController = null;
+    println("DMX init failed: " + e.getMessage());
+    dmx = null;
   }
-
-  // Set a custom DMX channel pattern for your fixture
-  canvas2Dmx.setChannelPattern("drgbsc"); // Dimmer, Red, Green, Blue, Strobe, Color
-  canvas2Dmx.setStartAt(1); // Start at channel 1
-
-  // Set default values for non-color channels
-  canvas2Dmx.setDefaultValue('d', 255); // Dimmer at full brightness
-  canvas2Dmx.setDefaultValue('s', 0);   // Strobe off
-  canvas2Dmx.setDefaultValue('c', 0);   // Color change off
-
-  // Map the 4 corners of a square
-  canvas2Dmx.mapSquareCorners(0, width / 2, height / 2, 100, 45); // 100px square, 45° rotation
-
-  // Apply gamma correction and color temperature
-  canvas2Dmx.setResponse(2.0);
-  canvas2Dmx.setTemperature(0.5); // Slightly cooler
-
-  // Set up the background and draw visuals
-  background(255);
-  fill(255, 0, 0);
-  ellipse(width / 2, height / 2, 150, 150);
 }
 
 void draw() {
-  // Sample colors from canvas
-  loadPixels();
-  color[] colors = canvas2Dmx.getLedColors(pixels);
+  background(0);
+  ellipse(mouseX, mouseY, 100, 100);
 
-  // Visualize the LED colors on the canvas
-  canvas2Dmx.visualize(colors);
-  
-  // Show LED position markers (toggle with 'l' key)
-  canvas2Dmx.showLedLocations();
+  int[] colors = c2d.getLedColors();
+  c2d.visualize(colors);
+  c2d.showLedLocations();
 
-  // Send colors to the DMX controller if connected
-  if (dmxController != null) {
-    canvas2Dmx.sendToDmx(dmxController);
-  } else {
-    println("DMX controller not connected. Skipping DMX output.");
+  if (dmx != null) {
+    // agnostic sender: DMX4Artists, ENTTEC, or your own backend
+    c2d.sendToDmx((ch, val) -> dmx.sendValue(ch, val));
   }
 }
+````
 
-void keyPressed() {
-  if (key == 'l') {
-    canvas2Dmx.enableShowLocations = !canvas2Dmx.enableShowLocations;
-    println("Show locations: " + canvas2Dmx.enableShowLocations);
-  }
-}
-```
+---
 
-## LED Mapping Methods
+## 🧩 Examples
+
+The library ships with 3 examples, found in the Processing IDE under
+**File → Examples → Contributed Libraries → Canvas2DMX**.
+
+* **Basics.pde** — Map one LED, sample from canvas, send to DMX
+* **StripMapping.pde** — Map a strip of LEDs and animate a gradient
+* **InteractiveDemo.pde** — Drag a circle, explore fixture patterns, test DMX values with keyboard controls
+
+Each example will run without hardware (console shows mock DMX output).
+When a DMX controller is connected, `sendToDmx(...)` sends live data.
+
+---
+
+## 🔧 LED Mapping Methods
 
 ### Single LED
+
 ```java
-canvas2Dmx.setLed(0, x, y); // Map LED 0 to position (x, y)
+c2d.setLed(0, x, y);
 ```
 
 ### LED Strip
+
 ```java
-canvas2Dmx.mapLedStrip(
-  0,           // Starting LED index
-  10,          // Number of LEDs
-  200, 200,    // Center position
-  20,          // Spacing between LEDs
-  radians(45), // Angle in radians
-  false        // Reversed order
-);
+c2d.mapLedStrip(0, 10, 200, 200, 20, radians(45), false);
 ```
 
 ### LED Ring
+
 ```java
-canvas2Dmx.mapLedRing(
-  0,           // Starting LED index
-  12,          // Number of LEDs
-  200, 200,    // Center position
-  50,          // Radius
-  0            // Starting angle
-);
+c2d.mapLedRing(0, 12, 200, 200, 50, 0);
 ```
 
 ### LED Grid
+
 ```java
-canvas2Dmx.mapLedGrid(
-  0,           // Starting LED index
-  8,           // LEDs per strip
-  4,           // Number of strips
-  200, 200,    // Center position
-  20,          // LED spacing
-  25,          // Strip spacing
-  0,           // Angle
-  true,        // Zigzag pattern
-  false        // Flip direction
-);
+c2d.mapLedGrid(0, 8, 4, 200, 200, 20, 25, 0, true, false);
 ```
 
 ### Square Corners
-```java
-canvas2Dmx.mapSquareCorners(
-  0,           // Starting LED index
-  200, 200,    // Center position
-  100,         // Size
-  45           // Rotation degrees
-);
-```
-
-## DMX Channel Patterns
-
-Configure your fixture's channel layout:
 
 ```java
-// Common patterns:
-canvas2Dmx.setChannelPattern("rgb");      // Simple RGB
-canvas2Dmx.setChannelPattern("rgbw");     // RGB + White
-canvas2Dmx.setChannelPattern("drgb");     // Dimmer + RGB
-canvas2Dmx.setChannelPattern("drgbsc");   // Dimmer + RGB + Strobe + Color
-canvas2Dmx.setChannelPattern("xrgbxxx");  // Extra channels for complex fixtures
-
-// Set default values for non-color channels:
-canvas2Dmx.setDefaultValue('d', 255);     // Dimmer full
-canvas2Dmx.setDefaultValue('s', 0);       // Strobe off
-canvas2Dmx.setDefaultValue('c', 0);       // Color change off
-canvas2Dmx.setDefaultValue('x', 255);     // Extra channels full intensity
+c2d.mapSquareCorners(0, 200, 200, 100, 45);
 ```
 
-## Key Methods
+---
 
-### Core Methods
-- **`setChannelPattern(String pattern)`**: Set the channel pattern for DMX data (e.g., `"rgb"`, `"drgbsc"`)
-- **`setStartAt(int startAt)`**: Set the starting DMX channel index
-- **`setDefaultValue(char channel, int value)`**: Set default values for specific placeholders in the channel pattern
-- **`getLedColors()`**: Extract pixel colors from the canvas and apply response curves
-- **`sendToDmx(DMXControl dmxController)`**: Send the RGB values (with channel pattern) to the DMX controller
+## 🎚 DMX Channel Patterns
+
+Configure fixtures with channel layouts:
+
+```java
+c2d.setChannelPattern("rgb");      // RGB only
+c2d.setChannelPattern("rgbw");     // RGB + White
+c2d.setChannelPattern("drgb");     // Dimmer + RGB
+c2d.setChannelPattern("drgbsc");   // Dimmer + RGB + Strobe + Color wheel
+c2d.setDefaultValue('d', 255);     // Default dimmer value
+c2d.setDefaultValue('s', 0);       // Strobe off
+```
+
+---
+
+## 🛠 Key Methods
+
+### Core
+
+* `setChannelPattern(String pattern)` — define fixture layout
+* `setStartAt(int startAt)` — starting DMX channel
+* `setDefaultValue(char channel, int value)` — default values for non-RGB channels
+* `getLedColors()` — sample pixels and apply corrections
+* `sendToDmx(BiConsumer<Integer,Integer>)` — send DMX via any backend
+* `buildDmxFrame(int universeSize)` — generate full DMX frame array
 
 ### Color Correction
-- **`setResponse(float response)`**: Apply gamma correction to colors (1.0 = linear, 2.2 = typical gamma)
-- **`setTemperature(float temperature)`**: Adjust color temperature (-1 = warm, 1 = cool)
-- **`setCustomCurve(float[] curve)`**: Apply a custom response curve
 
-### Mapping Methods
-- **`setLed(int index, int x, int y)`**: Map a single LED to canvas coordinates
-- **`mapLedStrip(...)`**: Map a linear strip of LEDs
-- **`mapLedRing(...)`**: Map LEDs in a circular pattern
-- **`mapLedGrid(...)`**: Map a rectangular grid of LEDs
-- **`mapSquareCorners(...)`**: Map LEDs to the corners of a square
+* `setResponse(float gamma)` — gamma correction (1.0 = linear, 2.2 typical)
+* `setTemperature(float t)` — adjust color temperature (-1 = warm, 1 = cool)
+* `setCustomCurve(float[] curve)` — custom correction curve
 
-### Visualization and Debugging
-- **`showLedLocations()`**: Draw LED position markers on canvas
-- **`visualize(color[] colors)`**: Display color bar showing LED colors
+### Visualization & Debugging
 
-## Interactive Controls
+* `showLedLocations()` — draw LED markers on canvas
+* `visualize(int[] colors)` — draw sampled LED colors
+* `setShowLocations(boolean enabled)` — toggle marker drawing
 
-### Debug Keys
-- **'l'** - Toggle LED position markers
-- **'p'** - Print LED positions to console
-- **'s'** - Save settings to file
+---
 
-### Manual DMX Testing
-- **'t'** - Send red to all channels
-- **'y'** - Send green to all channels  
-- **'u'** - Send blue to all channels
+## 🔒 Advanced Features
 
-### Fixture Control
-- **'1'** - Full brightness, effects off
-- **'2'** - Half brightness
-- **'3'** - Enable strobe (be careful!)
-- **'4'** - Disable strobe
+### Save & Load Settings
 
-## Advanced Features
+You can save the current response/temperature/curve settings to a file and reload them later.  
+This is useful for keeping fixture profiles consistent across sketches.
 
-### Save/Load Settings
 ```java
-canvas2Dmx.saveSettings("mySettings.txt");
-canvas2Dmx.loadSettings("mySettings.txt");
+// Save current settings to a file
+c2d.saveSettings("mySettings.txt");
+
+// Later, reload them
+c2d.loadSettings("mySettings.txt");
 ```
 
 ### Custom Response Curves
+
+Instead of a simple gamma correction, you can define your own brightness curve.  
+The curve is an array of values between `0.0` and `1.0` that remap input brightness → output brightness.  
+This lets you calibrate your LEDs more precisely than with `setResponse()`.
+
 ```java
-float[] customCurve = {0.0, 0.1, 0.3, 0.7, 1.0};
-canvas2Dmx.setCustomCurve(customCurve);
+// Example: nonlinear custom brightness curve
+float[] customCurve = {
+  0.0,  // off
+  0.05, // very dim
+  0.2,
+  0.5,
+  0.8,
+  1.0   // full brightness
+};
+
+c2d.setCustomCurve(customCurve);
 ```
 
-## Troubleshooting
+---
 
-### Common Issues
+## ⚠️ Troubleshooting
 
-**Colors always white/wrong:**
-- Ensure `pixelDensity(1)` is called in `setup()` - this is the most common issue on high-DPI displays
-- Check LED positions with `'l'` key to see if they're where you expect
-- Verify channel pattern matches your fixture's manual
+**Colors wrong or always white**
 
-**DMX not connecting:**
-- Check USB cable and DMX controller
-- Try different initialization methods:
-```java
-dmxController = new DMXControl(0, 256);                    // Device index
-dmxController = new DMXControl("SERIAL_NUMBER", 256);      // Serial number  
-dmxController = new DMXControl("/dev/tty.usbserial-XXX", 256); // Port path
-```
+* Ensure `pixelDensity(1)` in `setup()`
+* Use `'l'` key in examples to check LED positions
+* Verify your fixture’s DMX channel pattern
 
-**Performance issues:**
-- Reduce number of LEDs
-- Lower frame rate with `frameRate(30)`
-- Disable debug output for production use
+**DMX not connecting**
 
-### Debug Information
+* Try alternate init methods:
 
-Enable verbose debugging:
-```java
-canvas2Dmx.enableShowLocations = true; // Show LED markers
-// Check console for color values and DMX channel assignments
-```
+  ```java
+  new DMXControl(0, 256);                       // device index
+  new DMXControl("SERIAL_NUMBER", 256);         // serial
+  new DMXControl("/dev/tty.usbserial-XXX", 256); // port path
+  ```
 
-## Roadmap
+**Performance**
 
-Here are some planned and recommended features that could enhance the utility of the `Canvas2Dmx` library:
+* Reduce number of LEDs
+* Use `frameRate(30)`
+* Disable debug printing
 
-### 1. **Dynamic Pattern Visualization**
-- **Description**: Add a feature that visualizes the DMX channel pattern being sent to the fixtures. This can help with debugging or understanding how the channel pattern maps to colors and channel indices.
-- **Use Case**: Displaying the mapping on-screen in a grid or overlay can help users understand how the DMX channels are populated.
-- **Status**: Planned.
+---
 
-### 2. **Logging DMX Output Data**
-- **Description**: Add logging of DMX data to a file for later review. This can capture the DMX channel values and save them to a file in case the user needs to debug or analyze the output.
-- **Use Case**: Useful for troubleshooting or reviewing the behavior of the fixture over time.
-- **Status**: Planned.
+## 🗺 Roadmap
 
-### 3. **Support for Color Models (e.g., RGBA, RGBW)**
-- **Description**: Provide support for additional color models like RGBA (with alpha) or RGBW (with a white channel).
-- **Use Case**: Many DMX fixtures use additional color channels like white or alpha. The user could choose between RGB, RGBW, and RGBA models.
-- **Status**: Planned.
+* Visualization of DMX channel mapping
+* Logging DMX output to file
+* Support for RGBW / RGBA fixtures
+* Real-time controls (sliders, OSC, MIDI)
 
-### 4. **Real-Time Adjustment and Visualization**
-- **Description**: Allow real-time control of DMX settings (such as gamma, color temperature, and patterns) via keyboard input or sliders on the Processing canvas.
-- **Use Case**: This would let users see how their changes affect the output in real time, without needing to recompile or adjust code.
-- **Status**: Planned.
+---
 
-## Example Projects
+## 📚 Inspirations
 
-- **Interactive painting** - Colors follow mouse movements
-- **Audio visualizer** - LEDs respond to music analysis  
-- **Generative patterns** - Algorithmic graphics control lighting
-- **Game lighting** - Sync lights with game events
-- **VJ performance** - Real-time visual effects
+* [FadeCandy](https://github.com/scanlime/fadecandy) by Micah Elizabeth Scott
+* [Open Pixel Control](https://github.com/scanlime/fadecandy/tree/master/examples/Processing)
 
-## Inspirations and References
+**Original OPC Credit**: Micah Elizabeth Scott, 2013. Released into the public domain.
 
-The `Canvas2Dmx` library was inspired by the following:
+---
 
-- [**FadeCandy**](https://github.com/scanlime/fadecandy): A tool for controlling WS2811/WS2812 LED pixels created by Micah Elizabeth Scott.
-- [**Open Pixel Control (OPC)**](https://github.com/scanlime/fadecandy/tree/master/examples/Processing): A simple protocol and client for driving individually addressable RGB LEDs.
+## 📜 License
 
-**Original OPC Credit**: Micah Elizabeth Scott, 2013 - Simple Open Pixel Control client for Processing, designed to sample each LED's color from some point on the canvas. This file is released into the public domain.
+MIT License © 2025 [Studio Jordan Shaw](https://www.jordanshaw.com/) by Micah Elizabeth Scott 
 
-## License
-
-This project is released under the MIT License.
