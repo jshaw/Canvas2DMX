@@ -95,3 +95,13 @@ First-time only (repo → *Settings → Pages*): set **Source** = `Deploy from a
 * [ ] Examples launch cleanly in Processing
 * [ ] GitHub Release has the zip attached
 * [ ] Submitted to Contribution Manager
+
+---
+
+## 📚 Learn More
+
+* **[Canvas2DMX](https://github.com/jshaw/Canvas2DMX)** — repo link
+* [Getting Started](getting-started.md) — installation and first sketch
+* [Troubleshooting](troubleshooting.md) — common issues and fixes
+* [Develop](develop.md) — contributing and building from source
+* [Release](release.md) — packaging and Contribution Manager

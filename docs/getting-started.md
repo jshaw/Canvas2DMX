@@ -98,3 +98,13 @@ Run the sketch — you’ll see LED markers drawn over your canvas, with sampled
 ---
 
 ✅ That’s it! You’re ready to build interactive Processing sketches that control DMX lighting in real time.
+
+---
+
+## 📚 Learn More
+
+* **[Canvas2DMX](https://github.com/jshaw/Canvas2DMX)** — repo link
+* [Getting Started](getting-started.md) — installation and first sketch
+* [Troubleshooting](troubleshooting.md) — common issues and fixes
+* [Develop](develop.md) — contributing and building from source
+* [Release](release.md) — packaging and Contribution Manager

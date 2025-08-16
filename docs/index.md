@@ -3,7 +3,7 @@
 **Canvas2DMX** is a Processing library that maps pixels from your sketch to DMX fixtures in real time.  
 Define LED mappings (strips, grids, rings, corners), apply color correction, and send output to any DMX backend using a simple callback.
 
-![Canvas2DMX demo](img/hero.png)
+![Canvas2DMX demo image](_img/canvas2DMX_screenshot.jpg)
 
 > Inspired by [FadeCandy](https://github.com/scanlime/fadecandy) and [Open Pixel Control](https://github.com/scanlime/fadecandy/tree/master/examples/Processing) by Micah Elizabeth Scott.
 
@@ -65,15 +65,6 @@ void draw() {
 
 ---
 
-## 📚 Learn More
-
-* [Getting Started](getting-started.md) — installation and first sketch
-* [Troubleshooting](troubleshooting.md) — common issues and fixes
-* [Develop](develop.md) — contributing and building from source
-* [Release](release.md) — packaging and Contribution Manager
-
----
-
 ## 🎥 Demo Video
 
 <iframe width="560" height="315" 
@@ -84,3 +75,13 @@ void draw() {
   referrerpolicy="strict-origin-when-cross-origin" 
   allowfullscreen>
 </iframe>
+
+---
+
+## 📚 Learn More
+
+* **[Canvas2DMX](https://github.com/jshaw/Canvas2DMX)** — repo link
+* [Getting Started](getting-started.md) — installation and first sketch
+* [Troubleshooting](troubleshooting.md) — common issues and fixes
+* [Develop](develop.md) — contributing and building from source
+* [Release](release.md) — packaging and Contribution Manager

@@ -83,3 +83,13 @@ We considered an overload that accepted `BiConsumer<Integer,Integer>`.
 However, having both `sendToDmx(DmxSender)` and `sendToDmx(BiConsumer<…>)` made lambdas **ambiguous** for the Java compiler.
 To keep the API simple and reliable, we **kept only** the `DmxSender` version.
 You still get one-line lambda calls, and the library stays backend-agnostic.
+
+---
+
+## 📚 Learn More
+
+* **[Canvas2DMX](https://github.com/jshaw/Canvas2DMX)** — repo link
+* [Getting Started](getting-started.md) — installation and first sketch
+* [Troubleshooting](troubleshooting.md) — common issues and fixes
+* [Develop](develop.md) — contributing and building from source
+* [Release](release.md) — packaging and Contribution Manager
