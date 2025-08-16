@@ -1,7 +1,5 @@
 import com.jaysonh.dmx4artists.*;
 
-import com.jaysonh.dmx4artists.*;
-
 Canvas2Dmx canvas2Dmx;
 DMXControl dmxController;
 int numDmxChannels = 256;
