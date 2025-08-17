@@ -5,6 +5,10 @@
 **Canvas2DMX** is a Processing library for mapping pixels from your sketch directly to DMX fixtures.  
 It lets you define LED mappings (strips, grids, rings, corners), apply color correction, and send data to any DMX backend (ENTTEC, SP201E, DMX4Artists, or your own).
 
+### **Github Pages link: [Canvas2DMX](https://jshaw.github.io/Canvas2DMX/).**
+
+---
+
 Inspired by [FadeCandy](https://github.com/scanlime/fadecandy) and [Open Pixel Control (OPC)](https://github.com/scanlime/fadecandy/tree/master/examples/Processing) by Micah Elizabeth Scott.
 
 ---

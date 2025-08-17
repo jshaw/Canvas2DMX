@@ -85,3 +85,9 @@ void draw() {
 * [Troubleshooting](troubleshooting.md) — common issues and fixes
 * [Develop](develop.md) — contributing and building from source
 * [Release](release.md) — packaging and Contribution Manager
+
+---
+
+## 📜 License
+
+MIT License © 2025 [Studio Jordan Shaw](https://www.jordanshaw.com/)
