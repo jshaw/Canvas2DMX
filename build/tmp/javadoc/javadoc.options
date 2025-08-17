@@ -4,7 +4,4 @@
 -notimestamp 
 -quiet 
 -windowtitle 'Canvas2DMX 0.0.1 API'
-'/Users/jordanshaw/Documents/Processing4/Canvas2DMX/src/main/java/com/myDomain/myLibrary/Grid.java'
-'/Users/jordanshaw/Documents/Processing4/Canvas2DMX/src/main/java/com/myDomain/myLibrary/Palette.java'
-'/Users/jordanshaw/Documents/Processing4/Canvas2DMX/src/main/java/com/myDomain/myLibrary/Grid2.java'
 '/Users/jordanshaw/Documents/Processing4/Canvas2DMX/src/main/java/com/studiojordanshaw/canvas2DMX/Canvas2DMX.java'
