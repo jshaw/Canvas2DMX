@@ -31,6 +31,10 @@ public class Canvas2DMX implements PConstants {
   /** Reference to the parent sketch for drawing and pixel access. */
   private final PApplet parent;
 
+  // -1 means use parent.width
+  private int canvasWidth = -1;
+  private int canvasHeight = -1;
+
   /**
    * Mapped pixel indices into parent.pixels for each LED index; -1 for unmapped.
    */
@@ -98,6 +102,20 @@ public class Canvas2DMX implements PConstants {
     this.customCurve = null;
   }
 
+  /** Set custom canvas dimensions for LED mapping (for off-screen buffers). */
+  public void setCanvasSize(int width, int height) {
+    this.canvasWidth = width;
+    this.canvasHeight = height;
+  }
+
+  private int getCanvasWidth() {
+    return canvasWidth > 0 ? canvasWidth : parent.width;
+  }
+
+  private int getCanvasHeight() {
+    return canvasHeight > 0 ? canvasHeight : parent.height;
+  }
+
   /**
    * Provide a custom [0..1] → [0..1] response curve (disables simple exponent).
    */
@@ -151,12 +169,21 @@ public class Canvas2DMX implements PConstants {
       Arrays.fill(pixelLocations, oldLen, pixelLocations.length, -1);
     }
 
-    // Constrain coordinate to canvas bounds
-    x = PApplet.constrain(x, 0, parent.width - 1);
-    y = PApplet.constrain(y, 0, parent.height - 1);
+    int w = getCanvasWidth();
+    int h = getCanvasHeight();
 
-    int pixelIndex = x + parent.width * y;
+    // Constrain coordinate to canvas bounds
+    x = PApplet.constrain(x, 0, w - 1);
+    y = PApplet.constrain(y, 0, h - 1);
+    
+    int pixelIndex = x + w * y;
     pixelLocations[index] = pixelIndex;
+
+    // x = PApplet.constrain(x, 0, parent.width - 1);
+    // y = PApplet.constrain(y, 0, parent.height - 1);
+
+    // int pixelIndex = x + parent.width * y;
+    // pixelLocations[index] = pixelIndex;
 
     if (parent.frameCount < 5) {
       parent.println("setLed(" + index + ", " + x + ", " + y + ") -> pixel[" + pixelIndex + "]");
@@ -325,36 +352,43 @@ public class Canvas2DMX implements PConstants {
    * Draw small markers and indices at mapped LED locations. Call after drawing
    * your scene.
    */
-  public void showLedLocations() {
-    if (!enableShowLocations || pixelLocations == null)
-      return;
+public void showLedLocations() {
+  if (!enableShowLocations || pixelLocations == null)
+    return;
 
-    int validCount = 0;
-    for (int i = 0; i < pixelLocations.length; i++) {
-      if (pixelLocations[i] >= 0)
-        validCount = i + 1;
-    }
-
-    parent.pushStyle();
-    for (int i = 0; i < validCount; i++) {
-      int loc = pixelLocations[i];
-      if (loc >= 0 && loc < parent.pixels.length) {
-        int y = loc / parent.width;
-        int x = loc % parent.width;
-
-        parent.noFill();
-        parent.stroke(255, 255, 0);
-        parent.strokeWeight(1);
-        parent.ellipse(x - 3, y - 3, 6, 6);
-
-        parent.fill(0);
-        parent.textAlign(PConstants.CENTER, PConstants.CENTER);
-        parent.textSize(10);
-        parent.text(i, x + 4, y + 4);
-      }
-    }
-    parent.popStyle();
+  // Ensure pixels array is loaded
+  if (parent.pixels == null) {
+    parent.loadPixels();
   }
+
+  int w = getCanvasWidth();
+  
+  int validCount = 0;
+  for (int i = 0; i < pixelLocations.length; i++) {
+    if (pixelLocations[i] >= 0)
+      validCount = i + 1;
+  }
+
+  parent.pushStyle();
+  for (int i = 0; i < validCount; i++) {
+    int loc = pixelLocations[i];
+    if (loc >= 0) {  // Remove the pixels.length check since we're not using pixels
+      int y = loc / w;
+      int x = loc % w;
+
+      parent.noFill();
+      parent.stroke(255, 255, 0);
+      parent.strokeWeight(1);
+      parent.ellipse(x, y, 2, 2);
+
+      parent.fill(0);
+      parent.textAlign(PConstants.CENTER, PConstants.CENTER);
+      parent.textSize(4);
+      parent.text(i, x + 2, y + 2);
+    }
+  }
+  parent.popStyle();
+}
 
   /** Quick swatch renderer for up to 20 LEDs at the bottom of the screen. */
   public void visualize(int[] processedColors) {
