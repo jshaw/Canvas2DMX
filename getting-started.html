@@ -327,6 +327,95 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#4-configuration-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Configuration Methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Configuration Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#canvas-size-off-screen-buffers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canvas Size (Off-Screen Buffers)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#channel-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Channel Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response-curve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Curve
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-working-with-off-screen-buffers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Working with Off-Screen Buffers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Working with Off-Screen Buffers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Points
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#4-next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -508,6 +597,95 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#4-configuration-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Configuration Methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Configuration Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#canvas-size-off-screen-buffers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canvas Size (Off-Screen Buffers)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#channel-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Channel Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response-curve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Curve
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-working-with-off-screen-buffers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Working with Off-Screen Buffers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Working with Off-Screen Buffers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Points
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#4-next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -631,6 +809,79 @@ This quickstart will guide you through installation and your first test sketch.<
 <span class="p">}</span>
 </code></pre></div>
 <p>Run the sketch — you’ll see LED markers drawn over your canvas, with sampled colors shown in a visualization strip at the bottom.</p>
+<hr />
+<hr />
+<h2 id="4-configuration-methods">4. Configuration Methods</h2>
+<p>Canvas2DMX provides several methods to configure how colors are sampled and sent to DMX:</p>
+<h3 id="canvas-size-off-screen-buffers">Canvas Size (Off-Screen Buffers)</h3>
+<div class="highlight"><pre><span></span><code><span class="n">c2d</span><span class="p">.</span><span class="na">setCanvasSize</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">width</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">height</span><span class="p">);</span>
+</code></pre></div>
+<p>Set custom canvas dimensions for LED mapping. <strong>Use this when sampling from a <code>PGraphics</code> buffer</strong> that has different dimensions than your sketch window. By default, Canvas2DMX uses the sketch's <code>width</code> and <code>height</code>.</p>
+<h3 id="channel-pattern">Channel Pattern</h3>
+<div class="highlight"><pre><span></span><code><span class="n">c2d</span><span class="p">.</span><span class="na">setChannelPattern</span><span class="p">(</span><span class="s">&quot;drgb&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// dimmer + RGB</span>
+<span class="n">c2d</span><span class="p">.</span><span class="na">setChannelPattern</span><span class="p">(</span><span class="s">&quot;rgb&quot;</span><span class="p">);</span><span class="w">   </span><span class="c1">// just RGB (default)</span>
+<span class="n">c2d</span><span class="p">.</span><span class="na">setChannelPattern</span><span class="p">(</span><span class="s">&quot;rgbw&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// RGB + white</span>
+</code></pre></div>
+<h3 id="default-values">Default Values</h3>
+<div class="highlight"><pre><span></span><code><span class="n">c2d</span><span class="p">.</span><span class="na">setDefaultValue</span><span class="p">(</span><span class="sc">&#39;d&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">);</span><span class="w">  </span><span class="c1">// dimmer at full</span>
+<span class="n">c2d</span><span class="p">.</span><span class="na">setDefaultValue</span><span class="p">(</span><span class="sc">&#39;s&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w">    </span><span class="c1">// strobe off</span>
+</code></pre></div>
+<h3 id="response-curve">Response Curve</h3>
+<div class="highlight"><pre><span></span><code><span class="n">c2d</span><span class="p">.</span><span class="na">setResponse</span><span class="p">(</span><span class="mf">2.2</span><span class="p">);</span><span class="w">           </span><span class="c1">// gamma correction</span>
+<span class="n">c2d</span><span class="p">.</span><span class="na">setTemperature</span><span class="p">(</span><span class="o">-</span><span class="mf">0.3</span><span class="p">);</span><span class="w">       </span><span class="c1">// warm color shift</span>
+</code></pre></div>
+<hr />
+<h2 id="5-working-with-off-screen-buffers">5. Working with Off-Screen Buffers</h2>
+<p>For advanced workflows, you can sample from a <code>PGraphics</code> buffer instead of the main canvas. This is useful when you want to keep LED mapping resolution independent from display resolution.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">com.studiojordanshaw.canvas2dmx.*</span><span class="p">;</span>
+
+<span class="n">Canvas2DMX</span><span class="w"> </span><span class="n">c2d</span><span class="p">;</span>
+<span class="n">PGraphics</span><span class="w"> </span><span class="n">ledBuffer</span><span class="p">;</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">setup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">size</span><span class="p">(</span><span class="mi">800</span><span class="p">,</span><span class="w"> </span><span class="mi">600</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// Create a smaller buffer for LED sampling</span>
+<span class="w">  </span><span class="n">ledBuffer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">createGraphics</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">c2d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Canvas2DMX</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// IMPORTANT: Tell Canvas2DMX the buffer dimensions</span>
+<span class="w">  </span><span class="n">c2d</span><span class="p">.</span><span class="na">setCanvasSize</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// Map LEDs relative to buffer coordinates</span>
+<span class="w">  </span><span class="n">c2d</span><span class="p">.</span><span class="na">mapLedStrip</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">draw</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Draw to the off-screen buffer</span>
+<span class="w">  </span><span class="n">ledBuffer</span><span class="p">.</span><span class="na">beginDraw</span><span class="p">();</span>
+<span class="w">  </span><span class="n">ledBuffer</span><span class="p">.</span><span class="na">background</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">  </span><span class="n">ledBuffer</span><span class="p">.</span><span class="na">fill</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">  </span><span class="n">ledBuffer</span><span class="p">.</span><span class="na">ellipse</span><span class="p">(</span>
+<span class="w">    </span><span class="n">map</span><span class="p">(</span><span class="n">mouseX</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">),</span>
+<span class="w">    </span><span class="n">map</span><span class="p">(</span><span class="n">mouseY</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">),</span>
+<span class="w">    </span><span class="mi">30</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span>
+<span class="w">  </span><span class="p">);</span>
+<span class="w">  </span><span class="n">ledBuffer</span><span class="p">.</span><span class="na">endDraw</span><span class="p">();</span>
+
+<span class="w">  </span><span class="c1">// Display buffer scaled up to window</span>
+<span class="w">  </span><span class="n">image</span><span class="p">(</span><span class="n">ledBuffer</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// Sample from the buffer&#39;s pixels</span>
+<span class="w">  </span><span class="n">ledBuffer</span><span class="p">.</span><span class="na">loadPixels</span><span class="p">();</span>
+<span class="w">  </span><span class="kt">int</span><span class="o">[]</span><span class="w"> </span><span class="n">colors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c2d</span><span class="p">.</span><span class="na">getLedColors</span><span class="p">(</span><span class="n">ledBuffer</span><span class="p">.</span><span class="na">pixels</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">c2d</span><span class="p">.</span><span class="na">visualize</span><span class="p">(</span><span class="n">colors</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="key-points">Key Points</h3>
+<ul>
+<li>Call <code>setCanvasSize()</code> <strong>before</strong> mapping LEDs</li>
+<li>LED coordinates should be relative to the buffer size, not the window size</li>
+<li>Use <code>getLedColors(buffer.pixels)</code> to sample from the buffer</li>
+<li>Don't forget to call <code>buffer.loadPixels()</code> before sampling</li>
+</ul>
 <hr />
 <h2 id="4-next-steps">4. Next Steps</h2>
 <ul>
