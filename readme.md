@@ -22,6 +22,7 @@ Inspired by [FadeCandy](https://github.com/scanlime/fadecandy) and [Open Pixel C
 - **Gamma correction** and **color temperature adjustment**
 - Built-in **visualization** (color bars, LED markers)
 - **Agnostic DMX output**: works with DMX4Artists, ENTTEC, SP201E, or any controller via a simple callback
+- **Off-screen buffer support** via `setCanvasSize()` for PGraphics workflows
 - Ships with **examples** from beginner to interactive
 
 ---
@@ -91,6 +92,50 @@ void draw() {
 
 ---
 
+## 🖼️ Off-Screen Buffer Support
+
+When sampling from a `PGraphics` buffer instead of the main sketch canvas, use `setCanvasSize()` to tell Canvas2DMX the buffer dimensions. This is essential when your off-screen buffer has different dimensions than your sketch window.
+
+```java
+PGraphics buffer;
+Canvas2DMX c2d;
+
+void setup() {
+  size(800, 600);
+  
+  // Create an off-screen buffer with different dimensions
+  buffer = createGraphics(200, 200);
+  
+  c2d = new Canvas2DMX(this);
+  
+  // Tell Canvas2DMX the buffer dimensions (not the sketch window size)
+  c2d.setCanvasSize(200, 200);
+  
+  // Map LEDs relative to the buffer size
+  c2d.mapLedStrip(0, 10, 100, 100, 80, 0, false);
+}
+
+void draw() {
+  // Draw to the off-screen buffer
+  buffer.beginDraw();
+  buffer.background(0);
+  buffer.fill(255, 0, 0);
+  buffer.ellipse(mouseX * 0.25, mouseY * 0.33, 50, 50);
+  buffer.endDraw();
+  
+  // Display the buffer on screen (scaled up)
+  image(buffer, 0, 0, width, height);
+  
+  // Sample LED colors from the buffer's pixels
+  buffer.loadPixels();
+  int[] colors = c2d.getLedColors(buffer.pixels);
+  
+  c2d.visualize(colors);
+}
+```
+
+---
+
 ## 🧩 Examples
 
 The library ships with 3 examples, found in the Processing IDE under
@@ -102,6 +147,14 @@ The library ships with 3 examples, found in the Processing IDE under
 
 Each example will run without hardware (console shows mock DMX output).
 When a DMX controller is connected, `sendToDmx(...)` sends live data.
+
+---
+
+### Why use off-screen buffers?
+
+- **Performance**: Sample from a smaller buffer while displaying at full resolution
+- **Flexibility**: Keep LED mapping resolution independent from display resolution
+- **Effects**: Apply different processing to the DMX output vs. the display
 
 ---
 
@@ -164,6 +217,8 @@ c2d.setDefaultValue('s', 0);       // Strobe off
 * `getLedColors()` — sample pixels and apply corrections
 * `sendToDmx(BiConsumer<Integer,Integer>)` — send DMX via any backend
 * `buildDmxFrame(int universeSize)` — generate full DMX frame array
+* `setCanvasSize(int width, int height)` | Set custom canvas dimensions for LED mapping (for off-screen buffers) |
+
 
 ### Color Correction
 
