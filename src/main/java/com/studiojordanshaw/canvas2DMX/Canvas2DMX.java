@@ -55,11 +55,64 @@ public class Canvas2DMX implements PConstants {
   /** Per-fixture channel pattern, e.g., "rgb", "drgb", "rgbw". */
   private String channelPattern = "rgb";
 
-  /** Starting DMX channel (0-based index into logical stream you’re sending). */
+  /** Starting DMX channel (0-based index into logical stream you're sending). */
   private int startAt = 0;
 
   /** Default values for non-r/g/b placeholders (e.g., 'd' for master dim). */
   private final HashMap<Character, Integer> defaultValues = new HashMap<>();
+
+  // ---------------------------------------------------------------------------
+  // Polygon Fill Configuration (Inner Class)
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Configuration for polygon LED fill orientation.
+   * Controls how LEDs are ordered when filling an arbitrary polygon.
+   */
+  public static class PolygonFillConfig {
+    
+    /** Starting corner: 0=TopLeft, 1=TopRight, 2=BottomRight, 3=BottomLeft */
+    public int startCorner = 0;
+    
+    /** If true, alternate row directions (serpentine/zigzag wiring) */
+    public boolean serpentine = true;
+    
+    /** Primary fill direction: true=horizontal rows, false=vertical columns */
+    public boolean horizontal = true;
+    
+    /** Spacing between LEDs along the primary axis (pixels) */
+    public float ledSpacing = 10.0f;
+    
+    /** Spacing between rows/columns (pixels) */
+    public float rowSpacing = 10.0f;
+    
+    /** Rotation angle in radians (applied to fill pattern, not polygon) */
+    public float angle = 0.0f;
+    
+    /** Margin inset from polygon edges (pixels) */
+    public float margin = 2.0f;
+    
+    public PolygonFillConfig() {}
+    
+    public PolygonFillConfig(float ledSpacing, float rowSpacing) {
+      this.ledSpacing = ledSpacing;
+      this.rowSpacing = rowSpacing;
+    }
+    
+    // Fluent setters for easy chaining
+    public PolygonFillConfig startAt(int corner) { this.startCorner = corner; return this; }
+    public PolygonFillConfig serpentine(boolean s) { this.serpentine = s; return this; }
+    public PolygonFillConfig horizontal(boolean h) { this.horizontal = h; return this; }
+    public PolygonFillConfig spacing(float led, float row) { 
+      this.ledSpacing = led; this.rowSpacing = row; return this; 
+    }
+    public PolygonFillConfig angle(float a) { this.angle = a; return this; }
+    public PolygonFillConfig margin(float m) { this.margin = m; return this; }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Constructor
+  // ---------------------------------------------------------------------------
 
   /**
    * Construct the library. Call this once in your sketch's setup():
@@ -154,6 +207,13 @@ public class Canvas2DMX implements PConstants {
   // Mapping helpers (set where each LED samples from the canvas)
   // ---------------------------------------------------------------------------
 
+  /** Clear all LED mappings. Call before remapping to avoid stale markers. */
+  public void clearLeds() {
+    if (pixelLocations != null) {
+      Arrays.fill(pixelLocations, -1);
+    }
+  }
+
   /** Map one LED to (x,y) in canvas coordinates. */
   public void setLed(int index, int x, int y) {
     if (index < 0)
@@ -178,12 +238,6 @@ public class Canvas2DMX implements PConstants {
     
     int pixelIndex = x + w * y;
     pixelLocations[index] = pixelIndex;
-
-    // x = PApplet.constrain(x, 0, parent.width - 1);
-    // y = PApplet.constrain(y, 0, parent.height - 1);
-
-    // int pixelIndex = x + parent.width * y;
-    // pixelLocations[index] = pixelIndex;
 
     if (parent.frameCount < 5) {
       parent.println("setLed(" + index + ", " + x + ", " + y + ") -> pixel[" + pixelIndex + "]");
@@ -235,9 +289,317 @@ public class Canvas2DMX implements PConstants {
     float[] yOff = { -half, -half, half, half };
     for (int i = 0; i < 4; i++) {
       float rx = x + xOff[i] * PApplet.cos(a) - yOff[i] * PApplet.sin(a);
-      float ry = y + xOff[i] * PApplet.sin(a) + yOff[i] * PApplet.cos(a);
+      float ry = x + xOff[i] * PApplet.sin(a) + yOff[i] * PApplet.cos(a);
       setLed(index + i, PApplet.round(rx), PApplet.round(ry));
     }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Polygon Fill Mapping
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Fill an arbitrary polygon with LEDs using scanline algorithm.
+   * 
+   * @param startIndex  First LED index to use
+   * @param vertices    Array of polygon vertices as float[][] where each element is {x, y}
+   * @param config      Fill configuration (orientation, spacing, etc.)
+   * @return            Number of LEDs mapped (next available index = startIndex + return value)
+   */
+  public int mapLedPolygon(int startIndex, float[][] vertices, PolygonFillConfig config) {
+    if (vertices == null || vertices.length < 3) {
+      parent.println("mapLedPolygon: Need at least 3 vertices");
+      return 0;
+    }
+    
+    // Convert float[][] to internal format
+    float[] xVerts = new float[vertices.length];
+    float[] yVerts = new float[vertices.length];
+    for (int i = 0; i < vertices.length; i++) {
+      xVerts[i] = vertices[i][0];
+      yVerts[i] = vertices[i][1];
+    }
+    
+    return mapLedPolygonInternal(startIndex, xVerts, yVerts, config);
+  }
+
+  /**
+   * Fill an arbitrary polygon with LEDs using scanline algorithm.
+   * Overload accepting PVector array (Processing-friendly).
+   * 
+   * @param startIndex  First LED index to use
+   * @param vertices    Array of PVector vertices
+   * @param config      Fill configuration (orientation, spacing, etc.)
+   * @return            Number of LEDs mapped (next available index = startIndex + return value)
+   */
+  public int mapLedPolygon(int startIndex, Object[] vertices, PolygonFillConfig config) {
+    if (vertices == null || vertices.length < 3) {
+      parent.println("mapLedPolygon: Need at least 3 vertices");
+      return 0;
+    }
+    
+    float[] xVerts = new float[vertices.length];
+    float[] yVerts = new float[vertices.length];
+    
+    for (int i = 0; i < vertices.length; i++) {
+      // Use reflection to get x,y from PVector without direct dependency
+      try {
+        java.lang.reflect.Field xField = vertices[i].getClass().getField("x");
+        java.lang.reflect.Field yField = vertices[i].getClass().getField("y");
+        xVerts[i] = xField.getFloat(vertices[i]);
+        yVerts[i] = yField.getFloat(vertices[i]);
+      } catch (Exception e) {
+        parent.println("mapLedPolygon: Invalid vertex object at index " + i);
+        return 0;
+      }
+    }
+    
+    return mapLedPolygonInternal(startIndex, xVerts, yVerts, config);
+  }
+
+  /**
+   * Internal polygon fill implementation using scanline algorithm.
+   */
+  private int mapLedPolygonInternal(int startIndex, float[] xVerts, float[] yVerts, PolygonFillConfig config) {
+    int numVerts = xVerts.length;
+    
+    // 1. Find bounding box
+    float minX = xVerts[0], maxX = xVerts[0];
+    float minY = yVerts[0], maxY = yVerts[0];
+    for (int i = 1; i < numVerts; i++) {
+      minX = Math.min(minX, xVerts[i]);
+      maxX = Math.max(maxX, xVerts[i]);
+      minY = Math.min(minY, yVerts[i]);
+      maxY = Math.max(maxY, yVerts[i]);
+    }
+    
+    // Apply margin to bounding box
+    minX += config.margin;
+    maxX -= config.margin;
+    minY += config.margin;
+    maxY -= config.margin;
+    
+    // 2. Calculate fill center (for rotation)
+    float centerX = (minX + maxX) / 2.0f;
+    float centerY = (minY + maxY) / 2.0f;
+    
+    // 3. Generate scanlines based on configuration
+    ArrayList<int[]> ledPositions = new ArrayList<int[]>();
+    
+    if (config.horizontal) {
+      // Horizontal scanlines (rows)
+      float rowStart, rowEnd, rowDir;
+      
+      // Determine row direction based on start corner
+      if (config.startCorner == 0 || config.startCorner == 1) {
+        // Top-Left or Top-Right: start from top
+        rowStart = minY;
+        rowEnd = maxY;
+        rowDir = config.rowSpacing;
+      } else {
+        // Bottom-Left or Bottom-Right: start from bottom
+        rowStart = maxY;
+        rowEnd = minY;
+        rowDir = -config.rowSpacing;
+      }
+      
+      int rowIndex = 0;
+      for (float y = rowStart; (rowDir > 0 ? y <= rowEnd : y >= rowEnd); y += rowDir) {
+        // Get X intersections for this scanline
+        ArrayList<Float> intersections = scanlineIntersections(xVerts, yVerts, y);
+        
+        if (intersections.size() >= 2) {
+          // Sort intersections
+          java.util.Collections.sort(intersections);
+          
+          // Process pairs of intersections (entry/exit points)
+          for (int i = 0; i < intersections.size() - 1; i += 2) {
+            float xStart = intersections.get(i) + config.margin;
+            float xEnd = intersections.get(i + 1) - config.margin;
+            
+            // Generate LED positions along this segment
+            ArrayList<int[]> rowLeds = new ArrayList<int[]>();
+            for (float x = xStart; x <= xEnd; x += config.ledSpacing) {
+              // Apply rotation around center if needed
+              int[] pos = applyRotation(x, y, centerX, centerY, config.angle);
+              rowLeds.add(pos);
+            }
+            
+            // Apply direction based on start corner and serpentine
+            boolean reverseRow = false;
+            if (config.startCorner == 1 || config.startCorner == 2) {
+              // Right-side start: first row goes right-to-left
+              reverseRow = true;
+            }
+            if (config.serpentine && (rowIndex % 2 == 1)) {
+              reverseRow = !reverseRow;
+            }
+            
+            if (reverseRow) {
+              java.util.Collections.reverse(rowLeds);
+            }
+            
+            ledPositions.addAll(rowLeds);
+          }
+        }
+        rowIndex++;
+      }
+      
+    } else {
+      // Vertical scanlines (columns)
+      float colStart, colEnd, colDir;
+      
+      // Determine column direction based on start corner
+      if (config.startCorner == 0 || config.startCorner == 3) {
+        // Left side: start from left
+        colStart = minX;
+        colEnd = maxX;
+        colDir = config.rowSpacing; // rowSpacing used for column spacing
+      } else {
+        // Right side: start from right
+        colStart = maxX;
+        colEnd = minX;
+        colDir = -config.rowSpacing;
+      }
+      
+      int colIndex = 0;
+      for (float x = colStart; (colDir > 0 ? x <= colEnd : x >= colEnd); x += colDir) {
+        // Get Y intersections for this vertical scanline
+        ArrayList<Float> intersections = scanlineIntersectionsVertical(xVerts, yVerts, x);
+        
+        if (intersections.size() >= 2) {
+          java.util.Collections.sort(intersections);
+          
+          for (int i = 0; i < intersections.size() - 1; i += 2) {
+            float yStart = intersections.get(i) + config.margin;
+            float yEnd = intersections.get(i + 1) - config.margin;
+            
+            ArrayList<int[]> colLeds = new ArrayList<int[]>();
+            for (float y = yStart; y <= yEnd; y += config.ledSpacing) {
+              int[] pos = applyRotation(x, y, centerX, centerY, config.angle);
+              colLeds.add(pos);
+            }
+            
+            // Apply direction based on start corner and serpentine
+            boolean reverseCol = false;
+            if (config.startCorner == 2 || config.startCorner == 3) {
+              // Bottom start: first column goes bottom-to-top
+              reverseCol = true;
+            }
+            if (config.serpentine && (colIndex % 2 == 1)) {
+              reverseCol = !reverseCol;
+            }
+            
+            if (reverseCol) {
+              java.util.Collections.reverse(colLeds);
+            }
+            
+            ledPositions.addAll(colLeds);
+          }
+        }
+        colIndex++;
+      }
+    }
+    
+    // 4. Map all LED positions
+    int ledCount = 0;
+    for (int[] pos : ledPositions) {
+      setLed(startIndex + ledCount, pos[0], pos[1]);
+      ledCount++;
+    }
+    
+    if (parent.frameCount < 5) {
+      parent.println("mapLedPolygon: Mapped " + ledCount + " LEDs starting at index " + startIndex);
+    }
+    
+    return ledCount;
+  }
+
+  /**
+   * Find X intersections of a horizontal scanline with polygon edges.
+   */
+  private ArrayList<Float> scanlineIntersections(float[] xVerts, float[] yVerts, float scanY) {
+    ArrayList<Float> intersections = new ArrayList<Float>();
+    int numVerts = xVerts.length;
+    
+    for (int i = 0; i < numVerts; i++) {
+      int j = (i + 1) % numVerts;
+      float y1 = yVerts[i];
+      float y2 = yVerts[j];
+      
+      // Check if scanline crosses this edge
+      if ((y1 <= scanY && y2 > scanY) || (y2 <= scanY && y1 > scanY)) {
+        // Calculate X intersection
+        float x1 = xVerts[i];
+        float x2 = xVerts[j];
+        float t = (scanY - y1) / (y2 - y1);
+        float xIntersect = x1 + t * (x2 - x1);
+        intersections.add(xIntersect);
+      }
+    }
+    
+    return intersections;
+  }
+
+  /**
+   * Find Y intersections of a vertical scanline with polygon edges.
+   */
+  private ArrayList<Float> scanlineIntersectionsVertical(float[] xVerts, float[] yVerts, float scanX) {
+    ArrayList<Float> intersections = new ArrayList<Float>();
+    int numVerts = xVerts.length;
+    
+    for (int i = 0; i < numVerts; i++) {
+      int j = (i + 1) % numVerts;
+      float x1 = xVerts[i];
+      float x2 = xVerts[j];
+      
+      // Check if scanline crosses this edge
+      if ((x1 <= scanX && x2 > scanX) || (x2 <= scanX && x1 > scanX)) {
+        float y1 = yVerts[i];
+        float y2 = yVerts[j];
+        float t = (scanX - x1) / (x2 - x1);
+        float yIntersect = y1 + t * (y2 - y1);
+        intersections.add(yIntersect);
+      }
+    }
+    
+    return intersections;
+  }
+
+  /**
+   * Apply rotation transform to a point around a center.
+   */
+  private int[] applyRotation(float x, float y, float cx, float cy, float angle) {
+    if (Math.abs(angle) < 0.001f) {
+      return new int[] { Math.round(x), Math.round(y) };
+    }
+    
+    float cos = (float) Math.cos(angle);
+    float sin = (float) Math.sin(angle);
+    float dx = x - cx;
+    float dy = y - cy;
+    
+    float rx = cx + dx * cos - dy * sin;
+    float ry = cy + dx * sin + dy * cos;
+    
+    return new int[] { Math.round(rx), Math.round(ry) };
+  }
+
+  /**
+   * Check if a point is inside a polygon (for validation/debugging).
+   */
+  public boolean pointInPolygon(float px, float py, float[] xVerts, float[] yVerts) {
+    boolean inside = false;
+    int numVerts = xVerts.length;
+    
+    for (int i = 0, j = numVerts - 1; i < numVerts; j = i++) {
+      if (((yVerts[i] > py) != (yVerts[j] > py)) &&
+          (px < (xVerts[j] - xVerts[i]) * (py - yVerts[i]) / (yVerts[j] - yVerts[i]) + xVerts[i])) {
+        inside = !inside;
+      }
+    }
+    
+    return inside;
   }
 
   // ---------------------------------------------------------------------------
@@ -352,43 +714,43 @@ public class Canvas2DMX implements PConstants {
    * Draw small markers and indices at mapped LED locations. Call after drawing
    * your scene.
    */
-public void showLedLocations() {
-  if (!enableShowLocations || pixelLocations == null)
-    return;
+  public void showLedLocations() {
+    if (!enableShowLocations || pixelLocations == null)
+      return;
 
-  // Ensure pixels array is loaded
-  if (parent.pixels == null) {
-    parent.loadPixels();
-  }
-
-  int w = getCanvasWidth();
-  
-  int validCount = 0;
-  for (int i = 0; i < pixelLocations.length; i++) {
-    if (pixelLocations[i] >= 0)
-      validCount = i + 1;
-  }
-
-  parent.pushStyle();
-  for (int i = 0; i < validCount; i++) {
-    int loc = pixelLocations[i];
-    if (loc >= 0) {  // Remove the pixels.length check since we're not using pixels
-      int y = loc / w;
-      int x = loc % w;
-
-      parent.noFill();
-      parent.stroke(255, 255, 0);
-      parent.strokeWeight(1);
-      parent.ellipse(x, y, 2, 2);
-
-      parent.fill(0);
-      parent.textAlign(PConstants.CENTER, PConstants.CENTER);
-      parent.textSize(4);
-      parent.text(i, x + 2, y + 2);
+    // Ensure pixels array is loaded
+    if (parent.pixels == null) {
+      parent.loadPixels();
     }
+
+    int w = getCanvasWidth();
+    
+    int validCount = 0;
+    for (int i = 0; i < pixelLocations.length; i++) {
+      if (pixelLocations[i] >= 0)
+        validCount = i + 1;
+    }
+
+    parent.pushStyle();
+    for (int i = 0; i < validCount; i++) {
+      int loc = pixelLocations[i];
+      if (loc >= 0) {
+        int y = loc / w;
+        int x = loc % w;
+
+        parent.noFill();
+        parent.stroke(255, 255, 0);
+        parent.strokeWeight(1);
+        parent.ellipse(x, y, 2, 2);
+
+        parent.fill(0);
+        parent.textAlign(PConstants.CENTER, PConstants.CENTER);
+        parent.textSize(4);
+        parent.text(i, x + 2, y + 2);
+      }
+    }
+    parent.popStyle();
   }
-  parent.popStyle();
-}
 
   /** Quick swatch renderer for up to 20 LEDs at the bottom of the screen. */
   public void visualize(int[] processedColors) {
@@ -409,12 +771,6 @@ public void showLedLocations() {
   // DMX send
   // ---------------------------------------------------------------------------
 
-  /**
-   * Send processed LED colors to a DMX controller using the current channel
-   * pattern.
-   * 
-   * @param dmxController an instance providing sendValue(int channel, int value)
-   */
   /** Minimal DMX sender contract: deliver a (channel, value) pair. */
   @FunctionalInterface
   public interface DmxSender {
@@ -436,7 +792,7 @@ public void showLedLocations() {
       return;
     }
 
-    int dmxIndex = startAt; // DMX channels are 1-based by convention in this API
+    int dmxIndex = startAt;
     for (int i = 0; i < colors.length; i++) {
       int r = (int) parent.red(colors[i]);
       int g = (int) parent.green(colors[i]);
@@ -484,7 +840,7 @@ public void showLedLocations() {
     if (colors.length == 0)
       return frame;
 
-    int idx = startAt; // 1-based
+    int idx = startAt;
     for (int i = 0; i < colors.length; i++) {
       int r = (int) parent.red(colors[i]);
       int g = (int) parent.green(colors[i]);
@@ -506,7 +862,6 @@ public void showLedLocations() {
           default:
             v = defaultValues.getOrDefault(ch, 0);
         }
-        // Map 1-based channel to 0-based array index; ignore out-of-range
         int arrIndex = idx - 1;
         if (arrIndex >= 0 && arrIndex < frame.length)
           frame[arrIndex] = v;
@@ -566,6 +921,7 @@ public void showLedLocations() {
   // ---------------------------------------------------------------------------
   // Helpers so examples don't touch internals
   // ---------------------------------------------------------------------------
+  
   public int getMappedLedCount() {
     if (pixelLocations == null)
       return 0;
@@ -602,8 +958,8 @@ public void showLedLocations() {
   }
 
   // --- Minimal interface to avoid compile coupling if desired ---
-  // You can delete this if you import your real DMXControl.
   public interface DMXControl {
     void sendValue(int channelIndex, int value);
   }
-}
+  
+} // End of Canvas2DMX class

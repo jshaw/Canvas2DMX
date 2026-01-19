@@ -115,6 +115,11 @@ implements processing.core.PConstants</span></div>
 <div class="col-last odd-row-color">
 <div class="block">Minimal DMX sender contract: deliver a (channel, value) pair.</div>
 </div>
+<div class="col-first even-row-color"><code>static class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="Canvas2DMX.PolygonFillConfig.html" class="type-name-link" title="class in com.studiojordanshaw.canvas2dmx">Canvas2DMX.PolygonFillConfig</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Configuration for polygon LED fill orientation.</div>
+</div>
 </div>
 </section>
 </li>
@@ -164,42 +169,47 @@ implements processing.core.PConstants</span></div>
 <div class="block">Build a DMX frame (1-based addressing) of the requested length.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearLeds()" class="member-name-link">clearLeds</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Processing lifecycle hook for cleanup.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getChannelPattern()" class="member-name-link">getChannelPattern</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int[]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLedColors()" class="member-name-link">getLedColors</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Convenience: samples from the parent sketch's current frame.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int[]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLedColors(int%5B%5D)" class="member-name-link">getLedColors</a><wbr>(int[]&nbsp;pixelArray)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sample mapped LEDs from a provided pixel buffer (ARGB).</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLedPixelLocation(int)" class="member-name-link">getLedPixelLocation</a><wbr>(int&nbsp;i)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMappedLedCount()" class="member-name-link">getMappedLedCount</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getStartAt()" class="member-name-link">getStartAt</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isShowLocationsEnabled()" class="member-name-link">isShowLocationsEnabled</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadSettings(java.lang.String)" class="member-name-link">loadSettings</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;filename)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Load response/temperature/customCurve from a text file in the sketch folder.</div>
+<div class="block">Clear all LED mappings.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mapLedGrid(int,int,int,float,float,float,float,float,boolean,boolean)" class="member-name-link">mapLedGrid</a><wbr>(int&nbsp;index,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Processing lifecycle hook for cleanup.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getChannelPattern()" class="member-name-link">getChannelPattern</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int[]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLedColors()" class="member-name-link">getLedColors</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Convenience: samples from the parent sketch's current frame.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int[]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLedColors(int%5B%5D)" class="member-name-link">getLedColors</a><wbr>(int[]&nbsp;pixelArray)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sample mapped LEDs from a provided pixel buffer (ARGB).</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLedPixelLocation(int)" class="member-name-link">getLedPixelLocation</a><wbr>(int&nbsp;i)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMappedLedCount()" class="member-name-link">getMappedLedCount</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getStartAt()" class="member-name-link">getStartAt</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isShowLocationsEnabled()" class="member-name-link">isShowLocationsEnabled</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadSettings(java.lang.String)" class="member-name-link">loadSettings</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;filename)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Load response/temperature/customCurve from a text file in the sketch folder.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mapLedGrid(int,int,int,float,float,float,float,float,boolean,boolean)" class="member-name-link">mapLedGrid</a><wbr>(int&nbsp;index,
  int&nbsp;stripLength,
  int&nbsp;numStrips,
  float&nbsp;x,
@@ -209,38 +219,60 @@ implements processing.core.PConstants</span></div>
  float&nbsp;angle,
  boolean&nbsp;zigzag,
  boolean&nbsp;flip)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Map a grid of LED strips with optional zigzag and flip.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mapLedRing(int,int,float,float,float,float)" class="member-name-link">mapLedRing</a><wbr>(int&nbsp;index,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mapLedPolygon(int,float%5B%5D%5B%5D,com.studiojordanshaw.canvas2dmx.Canvas2DMX.PolygonFillConfig)" class="member-name-link">mapLedPolygon</a><wbr>(int&nbsp;startIndex,
+ float[][]&nbsp;vertices,
+ <a href="Canvas2DMX.PolygonFillConfig.html" title="class in com.studiojordanshaw.canvas2dmx">Canvas2DMX.PolygonFillConfig</a>&nbsp;config)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Fill an arbitrary polygon with LEDs using scanline algorithm.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mapLedPolygon(int,java.lang.Object%5B%5D,com.studiojordanshaw.canvas2dmx.Canvas2DMX.PolygonFillConfig)" class="member-name-link">mapLedPolygon</a><wbr>(int&nbsp;startIndex,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>[]&nbsp;vertices,
+ <a href="Canvas2DMX.PolygonFillConfig.html" title="class in com.studiojordanshaw.canvas2dmx">Canvas2DMX.PolygonFillConfig</a>&nbsp;config)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Fill an arbitrary polygon with LEDs using scanline algorithm.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mapLedRing(int,int,float,float,float,float)" class="member-name-link">mapLedRing</a><wbr>(int&nbsp;index,
  int&nbsp;count,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;radius,
  float&nbsp;angle)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Map a ring of LEDs (clockwise from angle).</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mapLedStrip(int,int,float,float,float,float,boolean)" class="member-name-link">mapLedStrip</a><wbr>(int&nbsp;index,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mapLedStrip(int,int,float,float,float,float,boolean)" class="member-name-link">mapLedStrip</a><wbr>(int&nbsp;index,
  int&nbsp;count,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;spacing,
  float&nbsp;angle,
  boolean&nbsp;reversed)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Map a linear strip of LEDs.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mapSquareCorners(int,float,float,float,float)" class="member-name-link">mapSquareCorners</a><wbr>(int&nbsp;index,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mapSquareCorners(int,float,float,float,float)" class="member-name-link">mapSquareCorners</a><wbr>(int&nbsp;index,
  float&nbsp;x,
  float&nbsp;y,
  float&nbsp;size,
  float&nbsp;rotationDegrees)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Map the 4 rotated corners of a square centered at (x,y).</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#pointInPolygon(float,float,float%5B%5D,float%5B%5D)" class="member-name-link">pointInPolygon</a><wbr>(float&nbsp;px,
+ float&nbsp;py,
+ float[]&nbsp;xVerts,
+ float[]&nbsp;yVerts)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Check if a point is inside a polygon (for validation/debugging).</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#saveSettings(java.lang.String)" class="member-name-link">saveSettings</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;filename)</code></div>
@@ -433,6 +465,13 @@ implements processing.core.PConstants</span></div>
 </section>
 </li>
 <li>
+<section class="detail" id="clearLeds()">
+<h3>clearLeds</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearLeds</span>()</div>
+<div class="block">Clear all LED mappings. Call before remapping to avoid stale markers.</div>
+</section>
+</li>
+<li>
 <section class="detail" id="setLed(int,int,int)">
 <h3>setLed</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setLed</span><wbr><span class="parameters">(int&nbsp;index,
@@ -491,6 +530,51 @@ implements processing.core.PConstants</span></div>
  float&nbsp;size,
  float&nbsp;rotationDegrees)</span></div>
 <div class="block">Map the 4 rotated corners of a square centered at (x,y).</div>
+</section>
+</li>
+<li>
+<section class="detail" id="mapLedPolygon(int,float[][],com.studiojordanshaw.canvas2dmx.Canvas2DMX.PolygonFillConfig)">
+<h3>mapLedPolygon</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">mapLedPolygon</span><wbr><span class="parameters">(int&nbsp;startIndex,
+ float[][]&nbsp;vertices,
+ <a href="Canvas2DMX.PolygonFillConfig.html" title="class in com.studiojordanshaw.canvas2dmx">Canvas2DMX.PolygonFillConfig</a>&nbsp;config)</span></div>
+<div class="block">Fill an arbitrary polygon with LEDs using scanline algorithm.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>startIndex</code> - First LED index to use</dd>
+<dd><code>vertices</code> - Array of polygon vertices as float[][] where each element is {x, y}</dd>
+<dd><code>config</code> - Fill configuration (orientation, spacing, etc.)</dd>
+<dt>Returns:</dt>
+<dd>Number of LEDs mapped (next available index = startIndex + return value)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="mapLedPolygon(int,java.lang.Object[],com.studiojordanshaw.canvas2dmx.Canvas2DMX.PolygonFillConfig)">
+<h3>mapLedPolygon</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">mapLedPolygon</span><wbr><span class="parameters">(int&nbsp;startIndex,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>[]&nbsp;vertices,
+ <a href="Canvas2DMX.PolygonFillConfig.html" title="class in com.studiojordanshaw.canvas2dmx">Canvas2DMX.PolygonFillConfig</a>&nbsp;config)</span></div>
+<div class="block">Fill an arbitrary polygon with LEDs using scanline algorithm.
+ Overload accepting PVector array (Processing-friendly).</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>startIndex</code> - First LED index to use</dd>
+<dd><code>vertices</code> - Array of PVector vertices</dd>
+<dd><code>config</code> - Fill configuration (orientation, spacing, etc.)</dd>
+<dt>Returns:</dt>
+<dd>Number of LEDs mapped (next available index = startIndex + return value)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="pointInPolygon(float,float,float[],float[])">
+<h3>pointInPolygon</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">pointInPolygon</span><wbr><span class="parameters">(float&nbsp;px,
+ float&nbsp;py,
+ float[]&nbsp;xVerts,
+ float[]&nbsp;yVerts)</span></div>
+<div class="block">Check if a point is inside a polygon (for validation/debugging).</div>
 </section>
 </li>
 <li>
