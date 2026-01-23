@@ -81,16 +81,16 @@ public class Canvas2DMX implements PConstants {
     public boolean horizontal = true;
     
     /** Spacing between LEDs along the primary axis (pixels) */
-    public float ledSpacing = 10.0f;
+    public float ledSpacing = 8.0f;
     
     /** Spacing between rows/columns (pixels) */
-    public float rowSpacing = 10.0f;
+    public float rowSpacing = 8.0f;
     
     /** Rotation angle in radians (applied to fill pattern, not polygon) */
     public float angle = 0.0f;
     
     /** Margin inset from polygon edges (pixels) */
-    public float margin = 2.0f;
+    public float margin = 1.0f;
     
     public PolygonFillConfig() {}
     
