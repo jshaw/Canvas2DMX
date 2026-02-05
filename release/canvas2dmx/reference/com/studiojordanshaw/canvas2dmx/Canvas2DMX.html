@@ -120,6 +120,11 @@ implements processing.core.PConstants</span></div>
 <div class="col-last even-row-color">
 <div class="block">Configuration for polygon LED fill orientation.</div>
 </div>
+<div class="col-first odd-row-color"><code>static class&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="Canvas2DMX.RowLayoutConfig.html" class="type-name-link" title="class in com.studiojordanshaw.canvas2dmx">Canvas2DMX.RowLayoutConfig</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Configuration for row-based polygon LED fill using fixed LED counts per row.</div>
+</div>
 </div>
 </section>
 </li>
@@ -194,6 +199,16 @@ implements processing.core.PConstants</span></div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLedPixelLocation(int)" class="member-name-link">getLedPixelLocation</a><wbr>(int&nbsp;i)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>processing.core.PVector</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLedPosition(int)" class="member-name-link">getLedPosition</a><wbr>(int&nbsp;index)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Return the LED's mapped position in canvas coordinates.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>processing.core.PVector[]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLedPositions()" class="member-name-link">getLedPositions</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Return an array of LED positions in canvas coordinates.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMappedLedCount()" class="member-name-link">getMappedLedCount</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -245,6 +260,20 @@ implements processing.core.PConstants</span></div>
  float&nbsp;angle)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Map a ring of LEDs (clockwise from angle).</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mapLedRowLayout(int,float%5B%5D%5B%5D,com.studiojordanshaw.canvas2dmx.Canvas2DMX.RowLayoutConfig)" class="member-name-link">mapLedRowLayout</a><wbr>(int&nbsp;startIndex,
+ float[][]&nbsp;vertices,
+ <a href="Canvas2DMX.RowLayoutConfig.html" title="class in com.studiojordanshaw.canvas2dmx">Canvas2DMX.RowLayoutConfig</a>&nbsp;config)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Fill an arbitrary polygon with LEDs using fixed counts per row.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mapLedRowLayout(int,java.lang.Object%5B%5D,com.studiojordanshaw.canvas2dmx.Canvas2DMX.RowLayoutConfig)" class="member-name-link">mapLedRowLayout</a><wbr>(int&nbsp;startIndex,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>[]&nbsp;vertices,
+ <a href="Canvas2DMX.RowLayoutConfig.html" title="class in com.studiojordanshaw.canvas2dmx">Canvas2DMX.RowLayoutConfig</a>&nbsp;config)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Fill an arbitrary polygon with LEDs using fixed counts per row.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mapLedStrip(int,int,float,float,float,float,boolean)" class="member-name-link">mapLedStrip</a><wbr>(int&nbsp;index,
@@ -319,34 +348,41 @@ implements processing.core.PConstants</span></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Set simple response exponent (disables custom curve).</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setShowLocations(boolean)" class="member-name-link">setShowLocations</a><wbr>(boolean&nbsp;enabled)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRowLayout(int,float%5B%5D%5B%5D,com.studiojordanshaw.canvas2dmx.Canvas2DMX.RowLayoutConfig)" class="member-name-link">setRowLayout</a><wbr>(int&nbsp;startIndex,
+ float[][]&nbsp;vertices,
+ <a href="Canvas2DMX.RowLayoutConfig.html" title="class in com.studiojordanshaw.canvas2dmx">Canvas2DMX.RowLayoutConfig</a>&nbsp;config)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Convenience alias for projects that conceptually refer to this as "setRowLayout".</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setShowLocations(boolean)" class="member-name-link">setShowLocations</a><wbr>(boolean&nbsp;enabled)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Enable or disable drawing LED markers.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStartAt(int)" class="member-name-link">setStartAt</a><wbr>(int&nbsp;startAt)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStartAt(int)" class="member-name-link">setStartAt</a><wbr>(int&nbsp;startAt)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Set the starting channel index for the DMX stream.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTemperature(float)" class="member-name-link">setTemperature</a><wbr>(float&nbsp;temperature)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTemperature(float)" class="member-name-link">setTemperature</a><wbr>(float&nbsp;temperature)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Set color temperature in [-1, 1] (negative = warm, positive = cool).</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#showLedLocations()" class="member-name-link">showLedLocations</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#showLedLocations()" class="member-name-link">showLedLocations</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Draw small markers and indices at mapped LED locations.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visualize(int%5B%5D)" class="member-name-link">visualize</a><wbr>(int[]&nbsp;processedColors)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visualize(int%5B%5D)" class="member-name-link">visualize</a><wbr>(int[]&nbsp;processedColors)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Quick swatch renderer for up to 20 LEDs at the bottom of the screen.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#warnIfNonStandardPixelDensityOnce()" class="member-name-link">warnIfNonStandardPixelDensityOnce</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#warnIfNonStandardPixelDensityOnce()" class="member-name-link">warnIfNonStandardPixelDensityOnce</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">One-time helper: warn if pixelDensity != 1 (sampling can misalign).</div>
 </div>
 </div>
@@ -568,6 +604,42 @@ implements processing.core.PConstants</span></div>
 </section>
 </li>
 <li>
+<section class="detail" id="mapLedRowLayout(int,float[][],com.studiojordanshaw.canvas2dmx.Canvas2DMX.RowLayoutConfig)">
+<h3>mapLedRowLayout</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">mapLedRowLayout</span><wbr><span class="parameters">(int&nbsp;startIndex,
+ float[][]&nbsp;vertices,
+ <a href="Canvas2DMX.RowLayoutConfig.html" title="class in com.studiojordanshaw.canvas2dmx">Canvas2DMX.RowLayoutConfig</a>&nbsp;config)</span></div>
+<div class="block">Fill an arbitrary polygon with LEDs using fixed counts per row.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>startIndex</code> - First LED index to use</dd>
+<dd><code>vertices</code> - Array of polygon vertices as float[][] where each element is {x, y}</dd>
+<dd><code>config</code> - Row layout configuration (counts, direction, etc.)</dd>
+<dt>Returns:</dt>
+<dd>Number of LEDs mapped (next available index = startIndex + return value)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="mapLedRowLayout(int,java.lang.Object[],com.studiojordanshaw.canvas2dmx.Canvas2DMX.RowLayoutConfig)">
+<h3>mapLedRowLayout</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">mapLedRowLayout</span><wbr><span class="parameters">(int&nbsp;startIndex,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>[]&nbsp;vertices,
+ <a href="Canvas2DMX.RowLayoutConfig.html" title="class in com.studiojordanshaw.canvas2dmx">Canvas2DMX.RowLayoutConfig</a>&nbsp;config)</span></div>
+<div class="block">Fill an arbitrary polygon with LEDs using fixed counts per row.
+ Overload accepting PVector array (Processing-friendly).</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setRowLayout(int,float[][],com.studiojordanshaw.canvas2dmx.Canvas2DMX.RowLayoutConfig)">
+<h3>setRowLayout</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">setRowLayout</span><wbr><span class="parameters">(int&nbsp;startIndex,
+ float[][]&nbsp;vertices,
+ <a href="Canvas2DMX.RowLayoutConfig.html" title="class in com.studiojordanshaw.canvas2dmx">Canvas2DMX.RowLayoutConfig</a>&nbsp;config)</span></div>
+<div class="block">Convenience alias for projects that conceptually refer to this as "setRowLayout".</div>
+</section>
+</li>
+<li>
 <section class="detail" id="pointInPolygon(float,float,float[],float[])">
 <h3>pointInPolygon</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">pointInPolygon</span><wbr><span class="parameters">(float&nbsp;px,
@@ -677,6 +749,22 @@ implements processing.core.PConstants</span></div>
 <section class="detail" id="getLedPixelLocation(int)">
 <h3>getLedPixelLocation</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getLedPixelLocation</span><wbr><span class="parameters">(int&nbsp;i)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="getLedPosition(int)">
+<h3>getLedPosition</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">processing.core.PVector</span>&nbsp;<span class="element-name">getLedPosition</span><wbr><span class="parameters">(int&nbsp;index)</span></div>
+<div class="block">Return the LED's mapped position in canvas coordinates.
+ Returns null if the index is out of range or unmapped.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getLedPositions()">
+<h3>getLedPositions</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">processing.core.PVector[]</span>&nbsp;<span class="element-name">getLedPositions</span>()</div>
+<div class="block">Return an array of LED positions in canvas coordinates.
+ Unmapped LEDs are returned as null entries.</div>
 </section>
 </li>
 <li>

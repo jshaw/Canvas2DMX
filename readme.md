@@ -190,6 +190,36 @@ c2d.mapLedGrid(0, 8, 4, 200, 200, 20, 25, 0, true, false);
 c2d.mapSquareCorners(0, 200, 200, 100, 45);
 ```
 
+### Polygon Fill (Auto Spacing)
+
+```java
+Canvas2DMX.PolygonFillConfig cfg = new Canvas2DMX.PolygonFillConfig(20, 24)
+  .startAt(0)        // 0=TL, 1=TR, 2=BR, 3=BL
+  .serpentine(true)  // zigzag
+  .horizontal(true) // rows (false = columns)
+  .margin(5);
+
+c2d.mapLedPolygon(0, shapeVerts, cfg);
+```
+
+### Row Layout (Fixed LEDs per Row)
+
+Use this when each physical LED string has a fixed count per row (tapered gables, triangles, etc.).
+
+```java
+int[] rows = { 20, 18, 16, 14, 12, 10 };
+
+Canvas2DMX.RowLayoutConfig rowCfg = new Canvas2DMX.RowLayoutConfig(rows)
+  .startAt(0)        // 0=TL, 1=TR, 2=BR, 3=BL
+  .serpentine(true)  // zigzag
+  .horizontal(true) // rows (false = columns)
+  .angleDeg(0)      // row direction angle in degrees
+  .rowSpacing(0)    // 0 = evenly distributed across height
+  .margin(5);
+
+c2d.setRowLayout(0, shapeVerts, rowCfg);
+```
+
 ---
 
 ## 🎚 DMX Channel Patterns
@@ -218,6 +248,9 @@ c2d.setDefaultValue('s', 0);       // Strobe off
 * `sendToDmx(BiConsumer<Integer,Integer>)` — send DMX via any backend
 * `buildDmxFrame(int universeSize)` — generate full DMX frame array
 * `setCanvasSize(int width, int height)` | Set custom canvas dimensions for LED mapping (for off-screen buffers) |
+* `mapLedPolygon(int start, float[][] verts, PolygonFillConfig cfg)` — fill any polygon with auto spacing
+* `mapLedRowLayout(int start, float[][] verts, RowLayoutConfig cfg)` — fixed LEDs per row
+* `setRowLayout(int start, float[][] verts, RowLayoutConfig cfg)` — alias of mapLedRowLayout
 
 
 ### Color Correction
@@ -318,4 +351,3 @@ c2d.setCustomCurve(customCurve);
 ## 📜 License
 
 MIT License © 2025 [Studio Jordan Shaw](https://www.jordanshaw.com/)
-

@@ -109,24 +109,29 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">Spacing between LEDs along the primary axis (pixels)</div>
 </div>
-<div class="col-first odd-row-color"><code>float</code></div>
-<div class="col-second odd-row-color"><code><a href="#margin" class="member-name-link">margin</a></code></div>
+<div class="col-first odd-row-color"><code>int</code></div>
+<div class="col-second odd-row-color"><code><a href="#ledsPerRow" class="member-name-link">ledsPerRow</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">Margin inset from polygon edges (pixels)</div>
+<div class="block">If > 0, force an exact number of LEDs per row/column segment.</div>
 </div>
 <div class="col-first even-row-color"><code>float</code></div>
-<div class="col-second even-row-color"><code><a href="#rowSpacing" class="member-name-link">rowSpacing</a></code></div>
+<div class="col-second even-row-color"><code><a href="#margin" class="member-name-link">margin</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">Margin inset from polygon edges (pixels)</div>
+</div>
+<div class="col-first odd-row-color"><code>float</code></div>
+<div class="col-second odd-row-color"><code><a href="#rowSpacing" class="member-name-link">rowSpacing</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Spacing between rows/columns (pixels)</div>
 </div>
-<div class="col-first odd-row-color"><code>boolean</code></div>
-<div class="col-second odd-row-color"><code><a href="#serpentine" class="member-name-link">serpentine</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>boolean</code></div>
+<div class="col-second even-row-color"><code><a href="#serpentine" class="member-name-link">serpentine</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">If true, alternate row directions (serpentine/zigzag wiring)</div>
 </div>
-<div class="col-first even-row-color"><code>int</code></div>
-<div class="col-second even-row-color"><code><a href="#startCorner" class="member-name-link">startCorner</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>int</code></div>
+<div class="col-second odd-row-color"><code><a href="#startCorner" class="member-name-link">startCorner</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Starting corner: 0=TopLeft, 1=TopRight, 2=BottomRight, 3=BottomLeft</div>
 </div>
 </div>
@@ -169,15 +174,18 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#margin(float)" class="member-name-link">margin</a><wbr>(float&nbsp;m)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Canvas2DMX.PolygonFillConfig.html" title="class in com.studiojordanshaw.canvas2dmx">Canvas2DMX.PolygonFillConfig</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#serpentine(boolean)" class="member-name-link">serpentine</a><wbr>(boolean&nbsp;s)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#rowLedCount(int)" class="member-name-link">rowLedCount</a><wbr>(int&nbsp;count)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Canvas2DMX.PolygonFillConfig.html" title="class in com.studiojordanshaw.canvas2dmx">Canvas2DMX.PolygonFillConfig</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spacing(float,float)" class="member-name-link">spacing</a><wbr>(float&nbsp;led,
- float&nbsp;row)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#serpentine(boolean)" class="member-name-link">serpentine</a><wbr>(boolean&nbsp;s)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Canvas2DMX.PolygonFillConfig.html" title="class in com.studiojordanshaw.canvas2dmx">Canvas2DMX.PolygonFillConfig</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#startAt(int)" class="member-name-link">startAt</a><wbr>(int&nbsp;corner)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spacing(float,float)" class="member-name-link">spacing</a><wbr>(float&nbsp;led,
+ float&nbsp;row)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Canvas2DMX.PolygonFillConfig.html" title="class in com.studiojordanshaw.canvas2dmx">Canvas2DMX.PolygonFillConfig</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#startAt(int)" class="member-name-link">startAt</a><wbr>(int&nbsp;corner)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -228,6 +236,15 @@ loadScripts(document, 'script');</script>
 <h3>rowSpacing</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">rowSpacing</span></div>
 <div class="block">Spacing between rows/columns (pixels)</div>
+</section>
+</li>
+<li>
+<section class="detail" id="ledsPerRow">
+<h3>ledsPerRow</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">ledsPerRow</span></div>
+<div class="block">If > 0, force an exact number of LEDs per row/column segment.
+ When enabled, ledSpacing is ignored for that axis and LEDs are
+ distributed evenly between the segment endpoints.</div>
 </section>
 </li>
 <li>
@@ -296,6 +313,12 @@ loadScripts(document, 'script');</script>
 <h3>spacing</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Canvas2DMX.PolygonFillConfig.html" title="class in com.studiojordanshaw.canvas2dmx">Canvas2DMX.PolygonFillConfig</a></span>&nbsp;<span class="element-name">spacing</span><wbr><span class="parameters">(float&nbsp;led,
  float&nbsp;row)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="rowLedCount(int)">
+<h3>rowLedCount</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Canvas2DMX.PolygonFillConfig.html" title="class in com.studiojordanshaw.canvas2dmx">Canvas2DMX.PolygonFillConfig</a></span>&nbsp;<span class="element-name">rowLedCount</span><wbr><span class="parameters">(int&nbsp;count)</span></div>
 </section>
 </li>
 <li>
