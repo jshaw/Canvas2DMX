@@ -1,7 +1,7 @@
 # Canvas2DMX
 
-**Canvas2DMX** is a Processing library that maps pixels from your sketch to DMX fixtures in real time.  
-Define LED mappings (strips, grids, rings, corners), apply color correction, and send output to any DMX backend using a simple callback.
+**Canvas2DMX** is a Processing library for pulling pixel data from your sketch and sending it to DMX lighting fixtures in real time.  
+It gives you mapping helpers for strips, rings, grids, corners, and polygon fills, plus a backend-agnostic DMX API so you can bridge to USB DMX, Art-Net, sACN, or your own sender.
 
 ![Canvas2DMX demo image](_img/canvas2DMX_screenshot.jpg)
 
@@ -11,18 +11,18 @@ Define LED mappings (strips, grids, rings, corners), apply color correction, and
 
 ## ✨ Features
 
-- Real-time color sampling from the Processing canvas  
-- Flexible LED mapping: strips, rings, grids, single points, square corners  
-- Custom DMX channel patterns (e.g. `"rgb"`, `"drgb"`, `"drgbsc"`)  
-- Default channel values for dimmer, strobe, color wheel, etc.  
-- Gamma / temperature correction and custom response curves  
-- Built-in visualization: color swatches + LED location markers  
-- DMX-agnostic API: works with DMX4Artists, ENTTEC, SP201E, or your own sender  
-- Examples included: **Basics**, **StripMapping**, **InteractiveDemo**  
+- Real-time color sampling from the Processing canvas
+- Flexible LED mapping: single points, strips, rings, grids, square corners
+- Polygon fill helpers for irregular shapes and row-based layouts
+- Custom DMX channel patterns such as `"rgb"`, `"drgb"`, and `"drgbsc"`
+- Default values for non-RGB channels like dimmer, strobe, and color wheel
+- Gamma / response correction, color temperature adjustment, and custom curves
+- Off-screen buffer support via `setCanvasSize()` for `PGraphics` workflows
+- Built-in debug visualization with color swatches and LED markers
 
 ---
 
-## 🚀 Quick Start Example
+## 🚀 Quick Start
 
 ```java
 import com.studiojordanshaw.canvas2dmx.*;
@@ -40,11 +40,12 @@ void setup() {
 
   c2d.setChannelPattern("drgb");
   c2d.setDefaultValue('d', 255);
-  c2d.setStartAt(1);
+  c2d.setStartAt(1); // DMX channel numbers are 1-based
 
   try {
     dmx = new DMXControl(0, 512);
   } catch (Exception e) {
+    println("DMX init failed: " + e.getMessage());
     dmx = null;
   }
 }
@@ -61,30 +62,70 @@ void draw() {
     c2d.sendToDmx((ch, val) -> dmx.sendValue(ch, val));
   }
 }
-````
+```
+
+---
+
+## 🧩 Example Lineup
+
+Canvas2DMX now ships with a clearer example ladder:
+
+- `Basics` shows one mapped LED, one sampled color, and console DMX preview
+- `StripMapping` focuses on linear layouts, reversible wiring, and `buildDmxFrame()`
+- `OffscreenBuffer` shows how to sample from a `PGraphics` buffer with `setCanvasSize()`
+- `PolygonMapping` demonstrates arbitrary shape fills and scanline ordering
+- `InteractiveDemo` lets you drag a live color source around a ring and switch fixture patterns
+
+All examples work without hardware by printing DMX preview output to the console.
+
+---
+
+## 🖼️ Off-Screen Buffers
+
+If you render to a `PGraphics` buffer instead of the main sketch window, tell Canvas2DMX the sampling dimensions before mapping LEDs:
+
+```java
+PGraphics ledBuffer;
+Canvas2DMX c2d;
+
+void setup() {
+  size(800, 600);
+
+  ledBuffer = createGraphics(160, 90);
+  c2d = new Canvas2DMX(this);
+  c2d.setCanvasSize(ledBuffer.width, ledBuffer.height);
+  c2d.mapLedGrid(0, 12, 6, 80, 45, 10, 12, 0, true, false);
+}
+
+void draw() {
+  ledBuffer.beginDraw();
+  ledBuffer.background(0);
+  ledBuffer.fill(255, 120, 0);
+  ledBuffer.ellipse(80, 45, 30, 30);
+  ledBuffer.endDraw();
+
+  ledBuffer.loadPixels();
+  int[] colors = c2d.getLedColors(ledBuffer.pixels);
+}
+```
+
+This keeps LED sampling resolution independent from display resolution and makes it easier to build performant lighting previews.
 
 ---
 
 ## 🎥 Demo Video
 
-<iframe width="560" height="315" 
-  src="https://www.youtube.com/embed/-gsM0a_rsXs?si=uhUCL9uekq10hPyp" 
-  title="Canvas2DMX demo video" 
-  frameborder="0" 
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-  referrerpolicy="strict-origin-when-cross-origin" 
-  allowfullscreen>
-</iframe>
+[![Watch the demo](_img/canvas2DMX_screenshot.jpg)](https://youtu.be/-gsM0a_rsXs?si=MXuY8Hiy-LBkyAh_)
 
 ---
 
 ## 📚 Learn More
 
-* **[Canvas2DMX](https://github.com/jshaw/Canvas2DMX)** — repo link
-* [Getting Started](getting-started.md) — installation and first sketch
-* [Troubleshooting](troubleshooting.md) — common issues and fixes
-* [Develop](develop.md) — contributing and building from source
-* [Release](release.md) — packaging and Contribution Manager
+- **[Canvas2DMX on GitHub](https://github.com/jshaw/Canvas2DMX)**
+- [Getting Started](getting-started.md)
+- [Troubleshooting](troubleshooting.md)
+- [Develop](develop.md)
+- [Release](release.md)
 
 ---
 

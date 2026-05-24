@@ -177,18 +177,20 @@ void draw() {
 
 ---
 
-## 4. Next Steps
+## 6. Next Steps
 
-* Try the **examples** included with the library:
+Try the **examples** included with the library:
 
-  * `Basics` — minimal LED mapping demo
-  * `StripMapping` — mapping a line of LEDs
-  * `InteractiveDemo` — drag shapes and see DMX output in real-time
+- `Basics` — the smallest possible sampling sketch
+- `StripMapping` — linear layouts and DMX frame preview
+- `OffscreenBuffer` — `PGraphics` workflows with `setCanvasSize()`
+- `PolygonMapping` — arbitrary shapes and fill ordering
+- `InteractiveDemo` — live fixture-pattern exploration
 
-* Check out:
+Check out:
 
-  * [Advanced Features](release.md) (gamma correction, channel patterns)
-  * [Troubleshooting](troubleshooting.md) if your DMX isn’t working
+- [Advanced Features](release.md) for packaging and release steps
+- [Troubleshooting](troubleshooting.md) if your DMX isn’t working
 
 ---
 

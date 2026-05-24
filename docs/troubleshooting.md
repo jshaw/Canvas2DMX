@@ -175,7 +175,7 @@ if (frameCount % 30 == 0) {
 
 ## 🆘 Still stuck?
 
-1) First, try the included examples: **Basics**, **StripMapping**, **InteractiveDemo**.
+1) First, try the included examples: **Basics**, **StripMapping**, **OffscreenBuffer**, **PolygonMapping**, **InteractiveDemo**.
 
 2) If the problem persists, **open an issue** here:  
    👉 [Open an issue](https://github.com/jshaw/Canvas2DMX/issues)

@@ -41,7 +41,7 @@ Quick local install for testing:
 ## 3) Smoke test
 
 1. Restart Processing.
-2. Run **Basics**, **StripMapping**, **InteractiveDemo** from
+2. Run **Basics**, **StripMapping**, **OffscreenBuffer**, **PolygonMapping**, and **InteractiveDemo** from
    *File → Examples → Contributed Libraries → Canvas2DMX*.
 3. With hardware: confirm DMX output. Without hardware: confirm console preview.
 
@@ -70,14 +70,14 @@ Follow the Processing submission steps to have the zip listed in the Contributio
 
 Your site is served from `/docs`.
 
-* **Edit docs** under `docs/` (Markdown + images in `docs/img/`).
+* **Edit docs** under `docs/` (Markdown + images in `docs/_img/`).
 * **Commit & push** to `main` — Pages updates automatically.
 
 First-time only (repo → *Settings → Pages*): set **Source** = `Deploy from a branch`, **Branch** = `main`, **Folder** = `/docs`.
 
 **Embedding media**
 
-* Image: `![Canvas2DMX demo](img/hero.png)`
+* Image: `![Canvas2DMX demo](_img/hero.png)`
 * YouTube:
 
   ```html

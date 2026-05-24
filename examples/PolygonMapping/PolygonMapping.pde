@@ -15,10 +15,8 @@
  */
 
 import com.studiojordanshaw.canvas2dmx.*;
-import com.jaysonh.dmx4artists.*;
 
 Canvas2DMX c2d;
-DMXControl dmxController;
 
 // Current polygon vertices
 PVector[] currentShape;
@@ -33,7 +31,7 @@ float rowSpacing = 22;
 float margin = 5;
 
 // Shape presets
-int shapeIndex = 0;
+int shapeIndex = -1;
 
 // LED count from last mapping
 int mappedLedCount = 0;
@@ -44,6 +42,7 @@ void settings() {
 }
 
 void setup() {
+  colorMode(HSB, 255);
   c2d = new Canvas2DMX(this);
   
   // Set up color correction
@@ -53,15 +52,6 @@ void setup() {
   // Initialize with first shape
   cycleShape();
   remapPolygon();
-  
-  // Initialize DMX (optional)
-  try {
-    dmxController = new DMXControl(0, 512);
-    println("DMX controller initialized");
-  } catch (Exception e) {
-    println("DMX init failed (running without hardware): " + e.getMessage());
-    dmxController = null;
-  }
   
   println("\n=== Polygon Mapping Demo ===");
   printControls();
@@ -88,9 +78,12 @@ void draw() {
   // Draw info panel
   drawInfoPanel();
   
-  // Send to DMX if available
-  if (dmxController != null) {
-    c2d.sendToDmx((ch, val) -> dmxController.sendValue(ch, val));
+  if (frameCount % 45 == 0) {
+    c2d.sendToDmx((ch, val) -> {
+      if (ch <= 12) {
+        println("ch " + ch + " = " + val);
+      }
+    });
   }
 }
 

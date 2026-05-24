@@ -23,7 +23,7 @@ Inspired by [FadeCandy](https://github.com/scanlime/fadecandy) and [Open Pixel C
 - Built-in **visualization** (color bars, LED markers)
 - **Agnostic DMX output**: works with DMX4Artists, ENTTEC, SP201E, or any controller via a simple callback
 - **Off-screen buffer support** via `setCanvasSize()` for PGraphics workflows
-- Ships with **examples** from beginner to interactive
+- Ships with **five examples** from beginner sampling to polygon layout
 
 ---
 
@@ -50,7 +50,7 @@ Inspired by [FadeCandy](https://github.com/scanlime/fadecandy) and [Open Pixel C
 ## 🚀 Basic Usage
 
 ```java
-import io.studiojordanshaw.canvas2dmx.*;
+import com.studiojordanshaw.canvas2dmx.*;
 import com.jaysonh.dmx4artists.*;
 
 Canvas2DMX c2d;
@@ -138,12 +138,14 @@ void draw() {
 
 ## 🧩 Examples
 
-The library ships with 3 examples, found in the Processing IDE under
+The library ships with 5 examples, found in the Processing IDE under
 **File → Examples → Contributed Libraries → Canvas2DMX**.
 
-* **Basics.pde** — Map one LED, sample from canvas, send to DMX
-* **StripMapping.pde** — Map a strip of LEDs and animate a gradient
-* **InteractiveDemo.pde** — Drag a circle, explore fixture patterns, test DMX values with keyboard controls
+* **Basics.pde** — one mapped LED, one sampled color, console DMX preview
+* **StripMapping.pde** — a linear strip with reversible wiring and DMX frame preview
+* **OffscreenBuffer.pde** — sample from a `PGraphics` buffer with `setCanvasSize()`
+* **PolygonMapping.pde** — fill arbitrary shapes and inspect scanline ordering
+* **InteractiveDemo.pde** — drag a live color source around a ring and switch fixture patterns
 
 Each example will run without hardware (console shows mock DMX output).
 When a DMX controller is connected, `sendToDmx(...)` sends live data.
@@ -242,12 +244,12 @@ c2d.setDefaultValue('s', 0);       // Strobe off
 ### Core
 
 * `setChannelPattern(String pattern)` — define fixture layout
-* `setStartAt(int startAt)` — starting DMX channel
+* `setStartAt(int startAt)` — starting DMX channel (1-based)
 * `setDefaultValue(char channel, int value)` — default values for non-RGB channels
 * `getLedColors()` — sample pixels and apply corrections
-* `sendToDmx(BiConsumer<Integer,Integer>)` — send DMX via any backend
+* `sendToDmx(DmxSender)` — send DMX via any backend
 * `buildDmxFrame(int universeSize)` — generate full DMX frame array
-* `setCanvasSize(int width, int height)` | Set custom canvas dimensions for LED mapping (for off-screen buffers) |
+* `setCanvasSize(int width, int height)` — set custom canvas dimensions for LED mapping (for off-screen buffers)
 * `mapLedPolygon(int start, float[][] verts, PolygonFillConfig cfg)` — fill any polygon with auto spacing
 * `mapLedRowLayout(int start, float[][] verts, RowLayoutConfig cfg)` — fixed LEDs per row
 * `setRowLayout(int start, float[][] verts, RowLayoutConfig cfg)` — alias of mapLedRowLayout
@@ -330,12 +332,13 @@ c2d.setCustomCurve(customCurve);
 
 ---
 
-## 🗺 Roadmap
+## 🗺 Roadmap / Missing Features
 
-* Visualization of DMX channel mapping
-* Logging DMX output to file
-* Support for RGBW / RGBA fixtures
-* Real-time controls (sliders, OSC, MIDI)
+* Built-in Art-Net / sACN adapters so users do not need to write their own sender bridge
+* Multi-universe output helpers when a mapped layout exceeds 512 DMX channels
+* Fixture presets for common channel patterns instead of requiring manual pattern strings
+* Alternate sampling modes such as averaged regions instead of single-pixel taps
+* A calibration workflow for per-fixture white balance and brightness matching
 
 ---
 
