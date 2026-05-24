@@ -80,6 +80,30 @@ All examples work without hardware by printing DMX preview output to the console
 
 ---
 
+## 📸 Example Gallery
+
+### Basics
+
+![Basics example](_img/canvas2DMX_screenshot_2.png)
+
+### Strip Mapping
+
+![Strip mapping example](_img/canvas2DMX_screenshot_3.png)
+
+### Off-Screen Buffer
+
+![Off-screen buffer example](_img/canvas2DMX_screenshot_4.png)
+
+### Polygon Mapping
+
+![Polygon mapping example](_img/canvas2DMX_screenshot_5.png)
+
+### Interactive Demo
+
+![Interactive demo example](_img/canvas2DMX_screenshot_6.png)
+
+---
+
 ## 🖼️ Off-Screen Buffers
 
 If you render to a `PGraphics` buffer instead of the main sketch window, tell Canvas2DMX the sampling dimensions before mapping LEDs:
