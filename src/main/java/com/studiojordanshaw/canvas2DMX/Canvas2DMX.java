@@ -56,8 +56,8 @@ public class Canvas2DMX implements PConstants {
   /** Per-fixture channel pattern, e.g., "rgb", "drgb", "rgbw". */
   private String channelPattern = "rgb";
 
-  /** Starting DMX channel (0-based index into logical stream you're sending). */
-  private int startAt = 0;
+  /** Starting DMX channel (1-based, matching standard DMX addressing). */
+  private int startAt = 1;
 
   /** Default values for non-r/g/b placeholders (e.g., 'd' for master dim). */
   private final HashMap<Character, Integer> defaultValues = new HashMap<>();
@@ -204,12 +204,18 @@ public class Canvas2DMX implements PConstants {
 
   /** Set simple response exponent (disables custom curve). */
   public void setResponse(float response) {
+    if (!Float.isFinite(response) || response <= 0f) {
+      throw new IllegalArgumentException("response must be a finite value > 0");
+    }
     this.response = response;
     this.customCurve = null;
   }
 
   /** Set custom canvas dimensions for LED mapping (for off-screen buffers). */
   public void setCanvasSize(int width, int height) {
+    if (width <= 0 || height <= 0) {
+      throw new IllegalArgumentException("canvas width and height must be > 0");
+    }
     this.canvasWidth = width;
     this.canvasHeight = height;
   }
@@ -226,7 +232,27 @@ public class Canvas2DMX implements PConstants {
    * Provide a custom [0..1] → [0..1] response curve (disables simple exponent).
    */
   public void setCustomCurve(float[] curve) {
-    this.customCurve = curve;
+    if (curve == null || curve.length < 2) {
+      throw new IllegalArgumentException("curve must contain at least 2 samples");
+    }
+
+    float[] normalized = Arrays.copyOf(curve, curve.length);
+    float previous = -1f;
+    for (int i = 0; i < normalized.length; i++) {
+      float value = normalized[i];
+      if (!Float.isFinite(value)) {
+        throw new IllegalArgumentException("curve values must be finite");
+      }
+      if (value < 0f || value > 1f) {
+        throw new IllegalArgumentException("curve values must be in the range [0, 1]");
+      }
+      if (value < previous) {
+        throw new IllegalArgumentException("curve values must be non-decreasing");
+      }
+      previous = value;
+    }
+
+    this.customCurve = normalized;
   }
 
   /** Set color temperature in [-1, 1] (negative = warm, positive = cool). */
@@ -242,10 +268,10 @@ public class Canvas2DMX implements PConstants {
     this.channelPattern = pattern;
   }
 
-  /** Set the starting channel index for the DMX stream. */
+  /** Set the starting DMX channel (1-based). */
   public void setStartAt(int startAt) {
-    if (startAt < 0)
-      throw new IllegalArgumentException("startAt must be >= 0");
+    if (startAt < 1)
+      throw new IllegalArgumentException("startAt must be >= 1");
     this.startAt = startAt;
   }
 
@@ -342,7 +368,7 @@ public class Canvas2DMX implements PConstants {
     float[] yOff = { -half, -half, half, half };
     for (int i = 0; i < 4; i++) {
       float rx = x + xOff[i] * PApplet.cos(a) - yOff[i] * PApplet.sin(a);
-      float ry = x + xOff[i] * PApplet.sin(a) + yOff[i] * PApplet.cos(a);
+      float ry = y + xOff[i] * PApplet.sin(a) + yOff[i] * PApplet.cos(a);
       setLed(index + i, PApplet.round(rx), PApplet.round(ry));
     }
   }
@@ -365,15 +391,25 @@ public class Canvas2DMX implements PConstants {
       return 0;
     }
     
-    // Convert float[][] to internal format
-    float[] xVerts = new float[vertices.length];
-    float[] yVerts = new float[vertices.length];
-    for (int i = 0; i < vertices.length; i++) {
-      xVerts[i] = vertices[i][0];
-      yVerts[i] = vertices[i][1];
-    }
-    
+    float[][] xyVerts = extractVertices(vertices, "mapLedPolygon");
+    float[] xVerts = xyVerts[0];
+    float[] yVerts = xyVerts[1];
+
     return mapLedPolygonInternal(startIndex, xVerts, yVerts, config);
+  }
+
+  /**
+   * Fill an arbitrary polygon with LEDs using scanline algorithm.
+   * Overload accepting PVector array.
+   */
+  public int mapLedPolygon(int startIndex, PVector[] vertices, PolygonFillConfig config) {
+    if (vertices == null || vertices.length < 3) {
+      parent.println("mapLedPolygon: Need at least 3 vertices");
+      return 0;
+    }
+
+    float[][] xyVerts = extractVertices(vertices, "mapLedPolygon");
+    return mapLedPolygonInternal(startIndex, xyVerts[0], xyVerts[1], config);
   }
 
   /**
@@ -391,23 +427,8 @@ public class Canvas2DMX implements PConstants {
       return 0;
     }
     
-    float[] xVerts = new float[vertices.length];
-    float[] yVerts = new float[vertices.length];
-    
-    for (int i = 0; i < vertices.length; i++) {
-      // Use reflection to get x,y from PVector without direct dependency
-      try {
-        java.lang.reflect.Field xField = vertices[i].getClass().getField("x");
-        java.lang.reflect.Field yField = vertices[i].getClass().getField("y");
-        xVerts[i] = xField.getFloat(vertices[i]);
-        yVerts[i] = yField.getFloat(vertices[i]);
-      } catch (Exception e) {
-        parent.println("mapLedPolygon: Invalid vertex object at index " + i);
-        return 0;
-      }
-    }
-    
-    return mapLedPolygonInternal(startIndex, xVerts, yVerts, config);
+    float[][] xyVerts = extractVertices(vertices, "mapLedPolygon");
+    return mapLedPolygonInternal(startIndex, xyVerts[0], xyVerts[1], config);
   }
 
   // ---------------------------------------------------------------------------
@@ -432,14 +453,26 @@ public class Canvas2DMX implements PConstants {
       return 0;
     }
 
-    float[] xVerts = new float[vertices.length];
-    float[] yVerts = new float[vertices.length];
-    for (int i = 0; i < vertices.length; i++) {
-      xVerts[i] = vertices[i][0];
-      yVerts[i] = vertices[i][1];
+    float[][] xyVerts = extractVertices(vertices, "mapLedRowLayout");
+    return mapLedRowLayoutInternal(startIndex, xyVerts[0], xyVerts[1], config);
+  }
+
+  /**
+   * Fill an arbitrary polygon with LEDs using fixed counts per row.
+   * Overload accepting PVector array.
+   */
+  public int mapLedRowLayout(int startIndex, PVector[] vertices, RowLayoutConfig config) {
+    if (vertices == null || vertices.length < 3) {
+      parent.println("mapLedRowLayout: Need at least 3 vertices");
+      return 0;
+    }
+    if (config == null || config.ledsPerRow == null || config.ledsPerRow.length == 0) {
+      parent.println("mapLedRowLayout: ledsPerRow must be provided");
+      return 0;
     }
 
-    return mapLedRowLayoutInternal(startIndex, xVerts, yVerts, config);
+    float[][] xyVerts = extractVertices(vertices, "mapLedRowLayout");
+    return mapLedRowLayoutInternal(startIndex, xyVerts[0], xyVerts[1], config);
   }
 
   /**
@@ -456,22 +489,8 @@ public class Canvas2DMX implements PConstants {
       return 0;
     }
 
-    float[] xVerts = new float[vertices.length];
-    float[] yVerts = new float[vertices.length];
-
-    for (int i = 0; i < vertices.length; i++) {
-      try {
-        java.lang.reflect.Field xField = vertices[i].getClass().getField("x");
-        java.lang.reflect.Field yField = vertices[i].getClass().getField("y");
-        xVerts[i] = xField.getFloat(vertices[i]);
-        yVerts[i] = yField.getFloat(vertices[i]);
-      } catch (Exception e) {
-        parent.println("mapLedRowLayout: Invalid vertex object at index " + i);
-        return 0;
-      }
-    }
-
-    return mapLedRowLayoutInternal(startIndex, xVerts, yVerts, config);
+    float[][] xyVerts = extractVertices(vertices, "mapLedRowLayout");
+    return mapLedRowLayoutInternal(startIndex, xyVerts[0], xyVerts[1], config);
   }
 
   /**
@@ -482,9 +501,26 @@ public class Canvas2DMX implements PConstants {
   }
 
   /**
+   * Convenience alias for projects that conceptually refer to this as "setRowLayout".
+   */
+  public int setRowLayout(int startIndex, PVector[] vertices, RowLayoutConfig config) {
+    return mapLedRowLayout(startIndex, vertices, config);
+  }
+
+  /**
    * Internal row layout implementation with fixed LEDs per row.
    */
   private int mapLedRowLayoutInternal(int startIndex, float[] xVerts, float[] yVerts, RowLayoutConfig config) {
+    if (!Float.isFinite(config.rowSpacing)) {
+      throw new IllegalArgumentException("config.rowSpacing must be finite");
+    }
+    if (!Float.isFinite(config.angleDeg)) {
+      throw new IllegalArgumentException("config.angleDeg must be finite");
+    }
+    if (!Float.isFinite(config.margin) || config.margin < 0f) {
+      throw new IllegalArgumentException("config.margin must be a finite value >= 0");
+    }
+
     int numVerts = xVerts.length;
     int rowCount = config.ledsPerRow.length;
 
@@ -660,9 +696,22 @@ public class Canvas2DMX implements PConstants {
    * Internal polygon fill implementation using scanline algorithm.
    */
   private int mapLedPolygonInternal(int startIndex, float[] xVerts, float[] yVerts, PolygonFillConfig config) {
+    if (config == null) {
+      throw new IllegalArgumentException("config must not be null");
+    }
+    if (!Float.isFinite(config.ledSpacing) || config.ledSpacing <= 0f) {
+      throw new IllegalArgumentException("config.ledSpacing must be a finite value > 0");
+    }
+    if (!Float.isFinite(config.rowSpacing) || config.rowSpacing <= 0f) {
+      throw new IllegalArgumentException("config.rowSpacing must be a finite value > 0");
+    }
+    if (!Float.isFinite(config.margin) || config.margin < 0f) {
+      throw new IllegalArgumentException("config.margin must be a finite value >= 0");
+    }
+
     int numVerts = xVerts.length;
-    
-    // 1. Find bounding box
+
+    // 1. Find bounding box in original space
     float minX = xVerts[0], maxX = xVerts[0];
     float minY = yVerts[0], maxY = yVerts[0];
     for (int i = 1; i < numVerts; i++) {
@@ -671,17 +720,43 @@ public class Canvas2DMX implements PConstants {
       minY = Math.min(minY, yVerts[i]);
       maxY = Math.max(maxY, yVerts[i]);
     }
-    
-    // Apply margin to bounding box
-    minX += config.margin;
-    maxX -= config.margin;
-    minY += config.margin;
-    maxY -= config.margin;
+
     
     // 2. Calculate fill center (for rotation)
     float centerX = (minX + maxX) / 2.0f;
     float centerY = (minY + maxY) / 2.0f;
-    
+
+    // Rotate polygon into layout space so clipping happens after the fill pattern
+    // has been rotated, not after points have already been accepted.
+    float[] xUse = xVerts;
+    float[] yUse = yVerts;
+    if (Math.abs(config.angle) > 0.0001f) {
+      xUse = new float[numVerts];
+      yUse = new float[numVerts];
+      for (int i = 0; i < numVerts; i++) {
+        float[] pt = rotatePointF(xVerts[i], yVerts[i], centerX, centerY, -config.angle);
+        xUse[i] = pt[0];
+        yUse[i] = pt[1];
+      }
+
+      minX = xUse[0];
+      maxX = xUse[0];
+      minY = yUse[0];
+      maxY = yUse[0];
+      for (int i = 1; i < numVerts; i++) {
+        minX = Math.min(minX, xUse[i]);
+        maxX = Math.max(maxX, xUse[i]);
+        minY = Math.min(minY, yUse[i]);
+        maxY = Math.max(maxY, yUse[i]);
+      }
+    }
+
+    // Apply margin to the layout-space bounding box.
+    minX += config.margin;
+    maxX -= config.margin;
+    minY += config.margin;
+    maxY -= config.margin;
+
     // 3. Generate scanlines based on configuration
     ArrayList<int[]> ledPositions = new ArrayList<int[]>();
     
@@ -705,7 +780,7 @@ public class Canvas2DMX implements PConstants {
       int rowIndex = 0;
       for (float y = rowStart; (rowDir > 0 ? y <= rowEnd : y >= rowEnd); y += rowDir) {
         // Get X intersections for this scanline
-        ArrayList<Float> intersections = scanlineIntersections(xVerts, yVerts, y);
+        ArrayList<Float> intersections = scanlineIntersections(xUse, yUse, y);
         
         if (intersections.size() >= 2) {
           // Sort intersections
@@ -780,7 +855,7 @@ public class Canvas2DMX implements PConstants {
       int colIndex = 0;
       for (float x = colStart; (colDir > 0 ? x <= colEnd : x >= colEnd); x += colDir) {
         // Get Y intersections for this vertical scanline
-        ArrayList<Float> intersections = scanlineIntersectionsVertical(xVerts, yVerts, x);
+        ArrayList<Float> intersections = scanlineIntersectionsVertical(xUse, yUse, x);
         
         if (intersections.size() >= 2) {
           java.util.Collections.sort(intersections);
@@ -1017,9 +1092,9 @@ public class Canvas2DMX implements PConstants {
    * @return processed ARGB color
    */
   public int applyResponse(int argb) {
-    float r = parent.red(argb) / 255f;
-    float g = parent.green(argb) / 255f;
-    float b = parent.blue(argb) / 255f;
+    float r = redChannel(argb) / 255f;
+    float g = greenChannel(argb) / 255f;
+    float b = blueChannel(argb) / 255f;
 
     // Temperature tweak (subtle, asymmetric by design)
     if (temperature > 0) {
@@ -1047,9 +1122,10 @@ public class Canvas2DMX implements PConstants {
       b = PApplet.pow(b, response);
     }
 
-    return parent.color(PApplet.constrain(r * 255f, 0, 255),
-        PApplet.constrain(g * 255f, 0, 255),
-        PApplet.constrain(b * 255f, 0, 255));
+    int red = (int) PApplet.constrain(r * 255f, 0, 255);
+    int green = (int) PApplet.constrain(g * 255f, 0, 255);
+    int blue = (int) PApplet.constrain(b * 255f, 0, 255);
+    return 0xFF000000 | (red << 16) | (green << 8) | blue;
   }
 
   /**
@@ -1062,6 +1138,9 @@ public class Canvas2DMX implements PConstants {
     if (pixelLocations == null) {
       parent.println("Canvas2DMX: Warning: No LEDs mapped!");
       return new int[0];
+    }
+    if (pixelArray == null) {
+      throw new IllegalArgumentException("pixelArray must not be null");
     }
 
     // Determine highest valid LED index (contiguous-ish use)
@@ -1081,16 +1160,17 @@ public class Canvas2DMX implements PConstants {
         colors[i] = processed;
 
         if (parent.frameCount % 30 == 0 && i < 2) {
-          int x = loc % parent.width;
-          int y = loc / parent.width;
+          int sampleWidth = getCanvasWidth();
+          int x = loc % sampleWidth;
+          int y = loc / sampleWidth;
           parent.println(String.format(
               "LED %d at (%d,%d): RAW(%d,%d,%d) PROC(%d,%d,%d)",
               i, x, y,
-              (int) parent.red(raw), (int) parent.green(raw), (int) parent.blue(raw),
-              (int) parent.red(processed), (int) parent.green(processed), (int) parent.blue(processed)));
+              redChannel(raw), greenChannel(raw), blueChannel(raw),
+              redChannel(processed), greenChannel(processed), blueChannel(processed)));
         }
       } else {
-        colors[i] = parent.color(0); // black
+        colors[i] = 0xFF000000;
         if (loc >= 0) {
           parent.println("Canvas2DMX: Warning: pixel location out of bounds for LED " + i + " -> " + loc);
         }
@@ -1186,11 +1266,20 @@ public class Canvas2DMX implements PConstants {
    * using the current channelPattern and startAt. Agnostic to any backend.
    */
   public void sendToDmx(DmxSender sender) {
+    parent.loadPixels();
+    sendToDmx(parent.pixels, sender);
+  }
+
+  /**
+   * Iterate over the current LED mapping and emit DMX channel/value pairs using
+   * colors sampled from the provided pixel array.
+   */
+  public void sendToDmx(int[] pixelArray, DmxSender sender) {
     if (sender == null) {
       parent.println("Canvas2DMX: Warning: DmxSender is null.");
       return;
     }
-    int[] colors = getLedColors();
+    int[] colors = getLedColors(pixelArray);
     if (colors.length == 0) {
       parent.println("Canvas2DMX: Warning: No LED colors to send.");
       return;
@@ -1198,9 +1287,9 @@ public class Canvas2DMX implements PConstants {
 
     int dmxIndex = startAt;
     for (int i = 0; i < colors.length; i++) {
-      int r = (int) parent.red(colors[i]);
-      int g = (int) parent.green(colors[i]);
-      int b = (int) parent.blue(colors[i]);
+      int r = redChannel(colors[i]);
+      int g = greenChannel(colors[i]);
+      int b = blueChannel(colors[i]);
 
       for (int j = 0; j < channelPattern.length(); j++) {
         char ch = channelPattern.charAt(j);
@@ -1236,19 +1325,27 @@ public class Canvas2DMX implements PConstants {
    * @return int[] of length frameLength with values 0..255
    */
   public int[] buildDmxFrame(int frameLength) {
+    parent.loadPixels();
+    return buildDmxFrame(parent.pixels, frameLength);
+  }
+
+  /**
+   * Build a DMX frame (1-based addressing) from a specific pixel buffer.
+   */
+  public int[] buildDmxFrame(int[] pixelArray, int frameLength) {
     if (frameLength <= 0)
       throw new IllegalArgumentException("frameLength must be > 0");
     int[] frame = new int[frameLength]; // zero-initialized
 
-    int[] colors = getLedColors();
+    int[] colors = getLedColors(pixelArray);
     if (colors.length == 0)
       return frame;
 
     int idx = startAt;
     for (int i = 0; i < colors.length; i++) {
-      int r = (int) parent.red(colors[i]);
-      int g = (int) parent.green(colors[i]);
-      int b = (int) parent.blue(colors[i]);
+      int r = redChannel(colors[i]);
+      int g = greenChannel(colors[i]);
+      int b = blueChannel(colors[i]);
 
       for (int j = 0; j < channelPattern.length(); j++) {
         char ch = channelPattern.charAt(j);
@@ -1298,27 +1395,38 @@ public class Canvas2DMX implements PConstants {
    */
   public void loadSettings(String filename) {
     BufferedReader reader = parent.createReader(filename);
+    if (reader == null) {
+      parent.println("Canvas2DMX: Error loading settings: could not open " + filename);
+      return;
+    }
     try {
       String line;
       if ((line = reader.readLine()) != null)
-        response = Float.parseFloat(line);
+        setResponse(Float.parseFloat(line));
       if ((line = reader.readLine()) != null)
-        temperature = Float.parseFloat(line);
+        setTemperature(Float.parseFloat(line));
 
       ArrayList<Float> curve = new ArrayList<>();
       while ((line = reader.readLine()) != null)
         curve.add(Float.parseFloat(line));
 
       if (!curve.isEmpty()) {
-        customCurve = new float[curve.size()];
+        float[] loadedCurve = new float[curve.size()];
         for (int i = 0; i < curve.size(); i++)
-          customCurve[i] = curve.get(i);
+          loadedCurve[i] = curve.get(i);
+        setCustomCurve(loadedCurve);
       }
-      reader.close();
     } catch (IOException e) {
       parent.println("Canvas2DMX: Error loading settings: " + e.getMessage());
     } catch (NumberFormatException e) {
       parent.println("Canvas2DMX: Error parsing settings: " + e.getMessage());
+    } catch (IllegalArgumentException e) {
+      parent.println("Canvas2DMX: Invalid settings: " + e.getMessage());
+    } finally {
+      try {
+        reader.close();
+      } catch (IOException ignored) {
+      }
     }
   }
 
@@ -1386,6 +1494,66 @@ public class Canvas2DMX implements PConstants {
 
   public String getChannelPattern() {
     return channelPattern;
+  }
+
+  private int redChannel(int argb) {
+    return (argb >> 16) & 0xFF;
+  }
+
+  private int greenChannel(int argb) {
+    return (argb >> 8) & 0xFF;
+  }
+
+  private int blueChannel(int argb) {
+    return argb & 0xFF;
+  }
+
+  private float[][] extractVertices(float[][] vertices, String methodName) {
+    float[] xVerts = new float[vertices.length];
+    float[] yVerts = new float[vertices.length];
+    for (int i = 0; i < vertices.length; i++) {
+      if (vertices[i] == null || vertices[i].length < 2) {
+        throw new IllegalArgumentException(methodName + ": vertex " + i + " must contain x and y");
+      }
+      xVerts[i] = vertices[i][0];
+      yVerts[i] = vertices[i][1];
+    }
+    return new float[][] { xVerts, yVerts };
+  }
+
+  private float[][] extractVertices(PVector[] vertices, String methodName) {
+    float[] xVerts = new float[vertices.length];
+    float[] yVerts = new float[vertices.length];
+    for (int i = 0; i < vertices.length; i++) {
+      if (vertices[i] == null) {
+        throw new IllegalArgumentException(methodName + ": vertex " + i + " must not be null");
+      }
+      xVerts[i] = vertices[i].x;
+      yVerts[i] = vertices[i].y;
+    }
+    return new float[][] { xVerts, yVerts };
+  }
+
+  private float[][] extractVertices(Object[] vertices, String methodName) {
+    float[] xVerts = new float[vertices.length];
+    float[] yVerts = new float[vertices.length];
+
+    for (int i = 0; i < vertices.length; i++) {
+      Object vertex = vertices[i];
+      if (vertex == null) {
+        throw new IllegalArgumentException(methodName + ": invalid vertex object at index " + i);
+      }
+      try {
+        java.lang.reflect.Field xField = vertex.getClass().getField("x");
+        java.lang.reflect.Field yField = vertex.getClass().getField("y");
+        xVerts[i] = xField.getFloat(vertex);
+        yVerts[i] = yField.getFloat(vertex);
+      } catch (ReflectiveOperationException e) {
+        throw new IllegalArgumentException(methodName + ": invalid vertex object at index " + i, e);
+      }
+    }
+
+    return new float[][] { xVerts, yVerts };
   }
 
   // ---------------------------------------------------------------------------
