@@ -276,10 +276,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-start-example" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🚀 Quick Start Example
+        🚀 Quick Start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-lineup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧩 Example Lineup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#off-screen-buffers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🖼️ Off-Screen Buffers
       
     </span>
   </a>
@@ -473,10 +495,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-start-example" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🚀 Quick Start Example
+        🚀 Quick Start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-lineup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧩 Example Lineup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#off-screen-buffers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🖼️ Off-Screen Buffers
       
     </span>
   </a>
@@ -534,8 +578,8 @@
 
 
 <h1 id="canvas2dmx">Canvas2DMX</h1>
-<p><strong>Canvas2DMX</strong> is a Processing library that maps pixels from your sketch to DMX fixtures in real time.<br />
-Define LED mappings (strips, grids, rings, corners), apply color correction, and send output to any DMX backend using a simple callback.</p>
+<p><strong>Canvas2DMX</strong> is a Processing library for pulling pixel data from your sketch and sending it to DMX lighting fixtures in real time.<br />
+It gives you mapping helpers for strips, rings, grids, corners, and polygon fills, plus a backend-agnostic DMX API so you can bridge to USB DMX, Art-Net, sACN, or your own sender.</p>
 <p><img alt="Canvas2DMX demo image" src="_img/canvas2DMX_screenshot.jpg" /></p>
 <blockquote>
 <p>Inspired by <a href="https://github.com/scanlime/fadecandy">FadeCandy</a> and <a href="https://github.com/scanlime/fadecandy/tree/master/examples/Processing">Open Pixel Control</a> by Micah Elizabeth Scott.</p>
@@ -543,66 +587,104 @@ Define LED mappings (strips, grids, rings, corners), apply color correction, and
 <hr />
 <h2 id="features">✨ Features</h2>
 <ul>
-<li>Real-time color sampling from the Processing canvas  </li>
-<li>Flexible LED mapping: strips, rings, grids, single points, square corners  </li>
-<li>Custom DMX channel patterns (e.g. <code>"rgb"</code>, <code>"drgb"</code>, <code>"drgbsc"</code>)  </li>
-<li>Default channel values for dimmer, strobe, color wheel, etc.  </li>
-<li>Gamma / temperature correction and custom response curves  </li>
-<li>Built-in visualization: color swatches + LED location markers  </li>
-<li>DMX-agnostic API: works with DMX4Artists, ENTTEC, SP201E, or your own sender  </li>
-<li>Examples included: <strong>Basics</strong>, <strong>StripMapping</strong>, <strong>InteractiveDemo</strong>  </li>
+<li>Real-time color sampling from the Processing canvas</li>
+<li>Flexible LED mapping: single points, strips, rings, grids, square corners</li>
+<li>Polygon fill helpers for irregular shapes and row-based layouts</li>
+<li>Custom DMX channel patterns such as <code>"rgb"</code>, <code>"drgb"</code>, and <code>"drgbsc"</code></li>
+<li>Default values for non-RGB channels like dimmer, strobe, and color wheel</li>
+<li>Gamma / response correction, color temperature adjustment, and custom curves</li>
+<li>Off-screen buffer support via <code>setCanvasSize()</code> for <code>PGraphics</code> workflows</li>
+<li>Built-in debug visualization with color swatches and LED markers</li>
 </ul>
 <hr />
-<h2 id="quick-start-example">🚀 Quick Start Example</h2>
-<p>```java
-import com.studiojordanshaw.canvas2dmx.<em>;
-import com.jaysonh.dmx4artists.</em>;</p>
-<p>Canvas2DMX c2d;
-DMXControl dmx;</p>
-<p>void setup() {
-  size(400, 200);
-  pixelDensity(1);</p>
-<p>c2d = new Canvas2DMX(this);
-  c2d.mapLedStrip(0, 8, width/2f, height/2f, 40, 0, false);</p>
-<p>c2d.setChannelPattern("drgb");
-  c2d.setDefaultValue('d', 255);
-  c2d.setStartAt(1);</p>
-<p>try {
-    dmx = new DMXControl(0, 512);
-  } catch (Exception e) {
-    dmx = null;
-  }
-}</p>
-<p>void draw() {
-  background(0);
-  ellipse(mouseX, mouseY, 100, 100);</p>
-<p>int[] colors = c2d.getLedColors();
-  c2d.visualize(colors);
-  c2d.showLedLocations();</p>
-<p>if (dmx != null) {
-    c2d.sendToDmx((ch, val) -&gt; dmx.sendValue(ch, val));
-  }
-}
-````</p>
+<h2 id="quick-start">🚀 Quick Start</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">com.studiojordanshaw.canvas2dmx.*</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.jaysonh.dmx4artists.*</span><span class="p">;</span>
+
+<span class="n">Canvas2DMX</span><span class="w"> </span><span class="n">c2d</span><span class="p">;</span>
+<span class="n">DMXControl</span><span class="w"> </span><span class="n">dmx</span><span class="p">;</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">setup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">size</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p">);</span>
+<span class="w">  </span><span class="n">pixelDensity</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">c2d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Canvas2DMX</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+<span class="w">  </span><span class="n">c2d</span><span class="p">.</span><span class="na">mapLedStrip</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">/</span><span class="mf">2f</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">/</span><span class="mf">2f</span><span class="p">,</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">c2d</span><span class="p">.</span><span class="na">setChannelPattern</span><span class="p">(</span><span class="s">&quot;drgb&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">c2d</span><span class="p">.</span><span class="na">setDefaultValue</span><span class="p">(</span><span class="sc">&#39;d&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">);</span>
+<span class="w">  </span><span class="n">c2d</span><span class="p">.</span><span class="na">setStartAt</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span><span class="w"> </span><span class="c1">// DMX channel numbers are 1-based</span>
+
+<span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">dmx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DMXControl</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">512</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;DMX init failed: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+<span class="w">    </span><span class="n">dmx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">draw</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">background</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">  </span><span class="n">ellipse</span><span class="p">(</span><span class="n">mouseX</span><span class="p">,</span><span class="w"> </span><span class="n">mouseY</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">int</span><span class="o">[]</span><span class="w"> </span><span class="n">colors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c2d</span><span class="p">.</span><span class="na">getLedColors</span><span class="p">();</span>
+<span class="w">  </span><span class="n">c2d</span><span class="p">.</span><span class="na">visualize</span><span class="p">(</span><span class="n">colors</span><span class="p">);</span>
+<span class="w">  </span><span class="n">c2d</span><span class="p">.</span><span class="na">showLedLocations</span><span class="p">();</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">dmx</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">c2d</span><span class="p">.</span><span class="na">sendToDmx</span><span class="p">((</span><span class="n">ch</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">dmx</span><span class="p">.</span><span class="na">sendValue</span><span class="p">(</span><span class="n">ch</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="p">));</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="example-lineup">🧩 Example Lineup</h2>
+<p>Canvas2DMX now ships with a clearer example ladder:</p>
+<ul>
+<li><code>Basics</code> shows one mapped LED, one sampled color, and console DMX preview</li>
+<li><code>StripMapping</code> focuses on linear layouts, reversible wiring, and <code>buildDmxFrame()</code></li>
+<li><code>OffscreenBuffer</code> shows how to sample from a <code>PGraphics</code> buffer with <code>setCanvasSize()</code></li>
+<li><code>PolygonMapping</code> demonstrates arbitrary shape fills and scanline ordering</li>
+<li><code>InteractiveDemo</code> lets you drag a live color source around a ring and switch fixture patterns</li>
+</ul>
+<p>All examples work without hardware by printing DMX preview output to the console.</p>
+<hr />
+<h2 id="off-screen-buffers">🖼️ Off-Screen Buffers</h2>
+<p>If you render to a <code>PGraphics</code> buffer instead of the main sketch window, tell Canvas2DMX the sampling dimensions before mapping LEDs:</p>
+<div class="highlight"><pre><span></span><code><span class="n">PGraphics</span><span class="w"> </span><span class="n">ledBuffer</span><span class="p">;</span>
+<span class="n">Canvas2DMX</span><span class="w"> </span><span class="n">c2d</span><span class="p">;</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">setup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">size</span><span class="p">(</span><span class="mi">800</span><span class="p">,</span><span class="w"> </span><span class="mi">600</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">ledBuffer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">createGraphics</span><span class="p">(</span><span class="mi">160</span><span class="p">,</span><span class="w"> </span><span class="mi">90</span><span class="p">);</span>
+<span class="w">  </span><span class="n">c2d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Canvas2DMX</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+<span class="w">  </span><span class="n">c2d</span><span class="p">.</span><span class="na">setCanvasSize</span><span class="p">(</span><span class="n">ledBuffer</span><span class="p">.</span><span class="na">width</span><span class="p">,</span><span class="w"> </span><span class="n">ledBuffer</span><span class="p">.</span><span class="na">height</span><span class="p">);</span>
+<span class="w">  </span><span class="n">c2d</span><span class="p">.</span><span class="na">mapLedGrid</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span><span class="w"> </span><span class="mi">45</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">draw</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">ledBuffer</span><span class="p">.</span><span class="na">beginDraw</span><span class="p">();</span>
+<span class="w">  </span><span class="n">ledBuffer</span><span class="p">.</span><span class="na">background</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">  </span><span class="n">ledBuffer</span><span class="p">.</span><span class="na">fill</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">120</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">  </span><span class="n">ledBuffer</span><span class="p">.</span><span class="na">ellipse</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span><span class="w"> </span><span class="mi">45</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">);</span>
+<span class="w">  </span><span class="n">ledBuffer</span><span class="p">.</span><span class="na">endDraw</span><span class="p">();</span>
+
+<span class="w">  </span><span class="n">ledBuffer</span><span class="p">.</span><span class="na">loadPixels</span><span class="p">();</span>
+<span class="w">  </span><span class="kt">int</span><span class="o">[]</span><span class="w"> </span><span class="n">colors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c2d</span><span class="p">.</span><span class="na">getLedColors</span><span class="p">(</span><span class="n">ledBuffer</span><span class="p">.</span><span class="na">pixels</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>This keeps LED sampling resolution independent from display resolution and makes it easier to build performant lighting previews.</p>
 <hr />
 <h2 id="demo-video">🎥 Demo Video</h2>
-<iframe width="560" height="315" 
-  src="https://www.youtube.com/embed/-gsM0a_rsXs?si=uhUCL9uekq10hPyp" 
-  title="Canvas2DMX demo video" 
-  frameborder="0" 
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-  referrerpolicy="strict-origin-when-cross-origin" 
-  allowfullscreen>
-</iframe>
-
+<p><a href="https://youtu.be/-gsM0a_rsXs?si=MXuY8Hiy-LBkyAh_"><img alt="Watch the demo" src="_img/canvas2DMX_screenshot.jpg" /></a></p>
 <hr />
 <h2 id="learn-more">📚 Learn More</h2>
 <ul>
-<li><strong><a href="https://github.com/jshaw/Canvas2DMX">Canvas2DMX</a></strong> — repo link</li>
-<li><a href="getting-started.html">Getting Started</a> — installation and first sketch</li>
-<li><a href="troubleshooting.html">Troubleshooting</a> — common issues and fixes</li>
-<li><a href="develop.html">Develop</a> — contributing and building from source</li>
-<li><a href="release.html">Release</a> — packaging and Contribution Manager</li>
+<li><strong><a href="https://github.com/jshaw/Canvas2DMX">Canvas2DMX on GitHub</a></strong></li>
+<li><a href="getting-started.html">Getting Started</a></li>
+<li><a href="troubleshooting.html">Troubleshooting</a></li>
+<li><a href="develop.html">Develop</a></li>
+<li><a href="release.html">Release</a></li>
 </ul>
 <hr />
 <h2 id="license">📜 License</h2>
