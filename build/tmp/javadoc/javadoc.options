@@ -1,7 +1,0 @@
--classpath '/Users/jordanshaw/Documents/Processing4/Canvas2DMX/build/classes/java/main:/Users/jordanshaw/Documents/Processing4/Canvas2DMX/build/resources/main:/Users/jordanshaw/.gradle/caches/modules-2/files-2.1/org.processing/core/4.3.1/5f7301dffaa8db5bd801e0f81124ced4eeb256e/core-4.3.1.jar'
--d '/Users/jordanshaw/Documents/Processing4/Canvas2DMX/build/docs/javadoc'
--doctitle 'Canvas2DMX 0.0.1 API'
--notimestamp 
--quiet 
--windowtitle 'Canvas2DMX 0.0.1 API'
-'/Users/jordanshaw/Documents/Processing4/Canvas2DMX/src/main/java/com/studiojordanshaw/canvas2DMX/Canvas2DMX.java'
