@@ -73,7 +73,6 @@ Your site is served from `/docs`.
 * **Edit docs** under `docs/` (Markdown + images in `docs/_img/`).
 * **Commit & push** to `main` — Pages updates automatically.
 * You do **not** need to deploy from `gh-pages` for the current repo setup.
-* You do **not** need `mkdocs gh-deploy` unless you intentionally switch Pages to a generated-site workflow later.
 
 First-time only (repo → *Settings → Pages*): set **Source** = `Deploy from a branch`, **Branch** = `main`, **Folder** = `/docs`.
 
