@@ -58,9 +58,42 @@ void draw() {
 
 <hr class="section-divider">
 
+<p class="section-label">Examples</p>
+
+<div class="gallery-grid">
+  <div class="gallery-item">
+    <img src="_img/canvas2DMX_screenshot_2.png" alt="Basics">
+    <div class="gallery-item-label">Basics</div>
+  </div>
+  <div class="gallery-item">
+    <img src="_img/canvas2DMX_screenshot_3.png" alt="Strip Mapping">
+    <div class="gallery-item-label">Strip Mapping</div>
+  </div>
+  <div class="gallery-item">
+    <img src="_img/canvas2DMX_screenshot_4.png" alt="Offscreen Buffer">
+    <div class="gallery-item-label">Offscreen Buffer</div>
+  </div>
+  <div class="gallery-item">
+    <img src="_img/canvas2DMX_screenshot_5.png" alt="Polygon Mapping">
+    <div class="gallery-item-label">Polygon Mapping</div>
+  </div>
+  <div class="gallery-item">
+    <img src="_img/canvas2DMX_screenshot_6.png" alt="Interactive Demo">
+    <div class="gallery-item-label">Interactive Demo</div>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<p class="section-label">Demo</p>
+
+[![Watch the demo](_img/canvas2DMX_screenshot.jpg)](https://youtu.be/-gsM0a_rsXs?si=MXuY8Hiy-LBkyAh_)
+
+<hr class="section-divider">
+
 <p class="section-label">Made with Canvas2DMX</p>
 
-<p>Installations by <a href="https://www.jordanshaw.com">Studio Jordan Shaw</a></p>
+<p>Installations built using this library — <a href="https://www.jordanshaw.com">Studio Jordan Shaw</a></p>
 
 <div class="project-grid">
 
@@ -105,39 +138,6 @@ void draw() {
   </a>
 
 </div>
-
-<hr class="section-divider">
-
-<p class="section-label">Examples</p>
-
-<div class="gallery-grid">
-  <div class="gallery-item">
-    <img src="_img/canvas2DMX_screenshot_2.png" alt="Basics">
-    <div class="gallery-item-label">Basics</div>
-  </div>
-  <div class="gallery-item">
-    <img src="_img/canvas2DMX_screenshot_3.png" alt="Strip Mapping">
-    <div class="gallery-item-label">Strip Mapping</div>
-  </div>
-  <div class="gallery-item">
-    <img src="_img/canvas2DMX_screenshot_4.png" alt="Offscreen Buffer">
-    <div class="gallery-item-label">Offscreen Buffer</div>
-  </div>
-  <div class="gallery-item">
-    <img src="_img/canvas2DMX_screenshot_5.png" alt="Polygon Mapping">
-    <div class="gallery-item-label">Polygon Mapping</div>
-  </div>
-  <div class="gallery-item">
-    <img src="_img/canvas2DMX_screenshot_6.png" alt="Interactive Demo">
-    <div class="gallery-item-label">Interactive Demo</div>
-  </div>
-</div>
-
-<hr class="section-divider">
-
-<p class="section-label">Demo</p>
-
-[![Watch the demo](_img/canvas2DMX_screenshot.jpg)](https://youtu.be/-gsM0a_rsXs?si=MXuY8Hiy-LBkyAh_)
 
 <hr class="section-divider">
 
