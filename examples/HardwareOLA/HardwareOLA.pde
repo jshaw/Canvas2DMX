@@ -34,7 +34,7 @@ int    ART_NET_UNIVERSE    = 1;       // must match the universe ID you created 
 //
 //   Traditional DMX fixture with dimmer: "drgb", "drgbsc", etc.
 //   Common patterns: "rgb"  "grb"  "drgb"  "drgbsc"  "rgbw"
-String DMX_CHANNEL_PATTERN = "drgbsc";  // ← change to match your fixture
+String DMX_CHANNEL_PATTERN = "grb";  // ← change to match your fixture
 
 // Response / gamma correction — tune this for your LED type:
 //   WS2812 / WS2815 via SP201E : ~2.2–2.6  (linear LEDs need gamma to avoid washed-out look)
