@@ -10,13 +10,22 @@ theme:
   name: material
   palette:
     - scheme: slate
-      primary: deep purple
-      accent: purple
+      primary: black
+      accent: deep purple
+  font:
+    text: Inter
+    code: JetBrains Mono
   features:
     - navigation.tabs
     - navigation.top
+    - navigation.instant
     - content.code.copy
     - content.code.annotate
+  icon:
+    repo: fontawesome/brands/github
+
+extra_css:
+  - stylesheets/extra.css
 
 nav:
   - Home: index.md
@@ -27,6 +36,8 @@ nav:
 
 markdown_extensions:
   - admonition
+  - attr_list
+  - md_in_html
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.superfences
