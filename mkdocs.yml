@@ -1,0 +1,37 @@
+site_name: Canvas2DMX
+site_url: https://jshaw.github.io/Canvas2DMX/
+site_description: Map pixel colors from your Processing sketch canvas to DMX lighting fixtures in real time.
+site_author: Jordan Shaw
+
+repo_name: jshaw/Canvas2DMX
+repo_url: https://github.com/jshaw/Canvas2DMX
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: deep purple
+      accent: purple
+  features:
+    - navigation.tabs
+    - navigation.top
+    - content.code.copy
+    - content.code.annotate
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Develop: develop.md
+  - Release: release.md
+  - Troubleshooting: troubleshooting.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - toc:
+      permalink: true

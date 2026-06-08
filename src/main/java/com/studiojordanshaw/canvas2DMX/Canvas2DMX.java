@@ -1264,6 +1264,19 @@ public class Canvas2DMX implements PConstants {
   /**
    * Iterate over the current LED mapping and emit DMX channel/value pairs
    * using the current channelPattern and startAt. Agnostic to any backend.
+   *
+   * <p>NOTE — frame tearing with threaded DMX libraries: some backends (e.g. dmxP512)
+   * send DMX on an independent timer thread. If that timer fires while this method is
+   * mid-loop, the first LEDs will go out in one DMX frame and the rest in the next,
+   * producing a visible rolling/cascade update on the strip.
+   *
+   * <p>To avoid this, use {@link #buildDmxFrame(int)} to pre-compute the complete
+   * frame array, then write it to your backend in one tight loop:
+   * <pre>
+   *   int[] frame = c2d.buildDmxFrame(512);
+   *   for (int i = 0; i &lt; frame.length; i++) dmxPro.set(i + DMX_OFFSET, frame[i]);
+   * </pre>
+   * This minimises the window in which the timer thread can interrupt.
    */
   public void sendToDmx(DmxSender sender) {
     parent.loadPixels();
@@ -1317,11 +1330,15 @@ public class Canvas2DMX implements PConstants {
   }
 
   /**
-   * Build a DMX frame (1-based addressing) of the requested length.
-   * frame[0] corresponds to DMX channel 1. Values outside the active range are 0.
-   * Handy if your backend prefers a single write() of a full universe.
+   * Build a complete DMX frame (1-based addressing) of the requested length.
+   * frame[0] corresponds to DMX channel 1. Values outside the active LED range are 0.
    *
-   * @param frameLength number of channels to produce (e.g., 512 for a universe)
+   * <p>Prefer this over {@link #sendToDmx(DmxSender)} when using a threaded DMX backend
+   * such as dmxP512. Computing the frame first and then writing it in one tight loop
+   * reduces the chance of the backend's send timer firing mid-update (which causes a
+   * visible rolling/cascade effect on LED strips).
+   *
+   * @param frameLength number of channels to produce (e.g., 512 for a full universe)
    * @return int[] of length frameLength with values 0..255
    */
   public int[] buildDmxFrame(int frameLength) {

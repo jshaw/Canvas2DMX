@@ -1,4 +1,10 @@
 .gradle/
 build/
 release/canvas2dmx/
+release/*.zip
+release/*.pdex
 site/
+
+# Processing IDE generated files
+**/*.autosave
+**/interactive-demo-settings.txt

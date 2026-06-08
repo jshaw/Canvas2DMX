@@ -8,17 +8,33 @@ This quickstart will guide you through installation and your first test sketch.
 ## 1. Requirements
 
 - **Processing 4.x**
-- **DMX4Artists library** by [Jayson-H](https://github.com/JaysonH/DMX4Artists)  
-- **Compatible DMX controller** (ENTTEC USB Pro, SP201E, etc.)
-- macOS / Windows / Linux with USB DMX adapter
+- **A USB DMX dongle** — see the table below to find your type
+- macOS / Windows / Linux
+
+### Which dongle do I have?
+
+There are two families of USB DMX dongle and they need different libraries. Every example has a single flag — `USE_ENTTEC_PRO` — to switch between them.
+
+| Dongle type | How to tell | Library | `USE_ENTTEC_PRO` |
+|---|---|---|---|
+| **ENTTEC USB Pro** (or compatible) | Has an onboard microcontroller; labeled "USB Pro", "DMX USB Pro", or "OpenDMX Pro" | **dmxP512** | `true` |
+| **FT232RL "Open DMX"** | Cheap transparent USB cable; "USB to DMX 512 Interface Adapter" on Amazon; FreeStyler dongle; any dongle built around an FT232RL chip | **DMX4Artists** | `false` |
+| **Art-Net / OLA** | You have Open Lighting Architecture installed as a middleware layer | artnet4j (UDP) | use `HardwareOLA` |
+
+> **Why two separate libraries?**  
+> The ENTTEC USB Pro has an onboard microcontroller and speaks a proprietary packet protocol — **dmxP512** handles that.  
+> Cheap FT232RL dongles are dumb USB→RS485 adapters with no microcontroller; the computer generates raw DMX timing itself — **DMX4Artists** does that via the FTDI driver.  
+> They are **not interchangeable**: dmxP512 will not work with an FT232RL dongle, and DMX4Artists will not work with an ENTTEC Pro.
 
 ---
 
 ## 2. Installation
 
-1. Install the **DMX4Artists** library in Processing:
+1. Install **both** DMX libraries in Processing (all examples import both, so both must be present to compile):
    - Open Processing → `Sketch` → `Import Library` → `Add Library…`
-   - Search for **DMX4Artists** and install.
+   - Search for **dmxP512** (by Daniel Bonner) and install.
+   - Search for **DMX4Artists** (by Jayson Haebich) and install.
+   - You only use one at runtime, selected by the `USE_ENTTEC_PRO` flag in each sketch.
 
 2. Download or clone the **Canvas2DMX** library:
    ```bash
@@ -38,47 +54,91 @@ This quickstart will guide you through installation and your first test sketch.
 
 ## 3. Your First Sketch
 
-Create a new Processing sketch and paste the following code:
+Open the **`Basics`** example (`File → Examples → Contributed Libraries → Canvas2DMX → Basics`) and update the config block at the top to match your setup:
 
 ```java
 import com.studiojordanshaw.canvas2dmx.*;
+import dmxP512.*;
+import processing.serial.*;
 import com.jaysonh.dmx4artists.*;
 
-Canvas2DMX c2d;
-DMXControl dmxController;
+// ── Configure these for your setup ──────────────────────────────────────────
+//
+// USE_ENTTEC_PRO — which dongle type are you using?
+//   true  → ENTTEC USB Pro — uses dmxP512 library, connects via DMX_PORT
+//   false → FT232RL cheap dongle — uses DMX4Artists, auto-detected by USB index
+//
+boolean USE_ENTTEC_PRO     = true;
 
-void settings() {
-  size(200, 200);
-  pixelDensity(1);
-}
+// DMX_PORT — serial port for ENTTEC Pro (only used when USE_ENTTEC_PRO=true).
+//   To list all ports: add  println(Serial.list());  to setup() and run.
+//   Mac: /dev/cu.usbserial-XXXXXXXX   Windows: COM3   Linux: /dev/ttyUSB0
+String DMX_PORT            = "/dev/cu.usbserial-XXXXXXXX"; // ← change this
+
+int    DMX_BAUDRATE        = 115000;  // ENTTEC Pro baud rate — do not change
+int    DMX_UNIVERSE        = 512;     // full DMX universe; max 512 channels
+
+// DMX_OFFSET — channel correction for dmxP512 (only used when USE_ENTTEC_PRO=true).
+//   1 = standard for ENTTEC Pro  |  0 = if channels arrive one step too high
+int    DMX_OFFSET          = 1;
+
+// DMX_CHANNEL_PATTERN — must match your fixture’s channel map (check its manual).
+//   d=dimmer  r=red  g=green  b=blue  w=white  s=strobe  c=color change macro
+//   Common: "rgb"  "grb"  "drgb"  "drgbsc"  "rgbw"
+String DMX_CHANNEL_PATTERN = "drgb"; // ← change this to match your fixture
+
+// ────────────────────────────────────────────────────────────────────────────
+
+Canvas2DMX c2d;
+DmxP512 dmxPro;   // used when USE_ENTTEC_PRO = true
+DMXControl dmxOpen; // used when USE_ENTTEC_PRO = false
+
+void settings() { size(320, 220); pixelDensity(1); }
 
 void setup() {
+  if (USE_ENTTEC_PRO) {
+    dmxPro = new DmxP512(this, DMX_UNIVERSE, false);
+    dmxPro.setupDmxPro(DMX_PORT, DMX_BAUDRATE);
+  } else {
+    dmxOpen = new DMXControl(0, DMX_UNIVERSE); // 0 = first detected FT232RL device
+  }
   c2d = new Canvas2DMX(this);
-  // Map one LED at the center
+  c2d.setChannelPattern(DMX_CHANNEL_PATTERN);
+  c2d.setDefaultValue(‘d’, 255);
+  c2d.setStartAt(1);
   c2d.setLed(0, width/2, height/2);
 }
 
 void draw() {
-  // Animate background color
   background(frameCount % 255, 100, 200);
-
-  // Get LED colors (samples canvas)
   int[] colors = c2d.getLedColors();
-
-  // Visualize in a small swatch
   c2d.visualize(colors);
-
-  // Show LED marker
   c2d.showLedLocations();
-  
-  // Send to DMX only if controller is connected
-  if (dmxController != null) {
-    c2d.sendToDmx((ch, val) -> dmxController.sendValue(ch, val));
+  sendDmx();
+}
+
+// sendDmx() — branches on USE_ENTTEC_PRO to call the right library.
+// This pattern is used in all Canvas2DMX examples.
+void sendDmx() {
+  if (USE_ENTTEC_PRO) {
+    c2d.sendToDmx((ch, val) -> dmxPro.set(ch + DMX_OFFSET - 1, val));
+  } else {
+    c2d.sendToDmx((ch, val) -> dmxOpen.sendValue(ch, val));
   }
 }
 ```
 
-Run the sketch — you’ll see LED markers drawn over your canvas, with sampled colors shown in a visualization strip at the bottom.
+Run the sketch — you’ll see LED markers drawn over your canvas and a color swatch strip at the bottom. If your dongle is connected and configured correctly, the fixture will respond immediately.
+
+### Finding your serial port (ENTTEC Pro)
+
+Add this line to `setup()`, run the sketch, and check the Processing console:
+
+```java
+println(Serial.list());
+```
+
+On macOS the ENTTEC Pro typically appears as `/dev/cu.usbserial-XXXXXXXX`. Use the `cu.` prefix — not `tty.` — for outgoing serial connections.
 
 ---
 
@@ -177,7 +237,58 @@ void draw() {
 
 ---
 
-## 6. Next Steps
+## 6. Using OLA (Open Lighting Architecture)
+
+OLA is middleware that sits between Processing and your USB dongle. Instead of talking to the dongle directly, your sketch sends **Art-Net UDP packets** to OLA on localhost — OLA then drives whatever hardware is patched to that universe. This means you can swap dongles without changing a line of code.
+
+**Works with:** ENTTEC USB Pro, FT232RL Open DMX, and most other dongles.
+
+### Setup
+
+```bash
+brew install ola        # macOS (Homebrew)
+olad -l 3               # start the OLA daemon
+```
+
+Then open **http://localhost:9090** in a browser:
+
+1. Click **Add Universe**, set Universe ID to `1`, name it anything (e.g. `canvas2DMX`)
+2. Under **Input Ports**, tick **ArtNet** — it will show `ArtNet Universe 0:0:1`
+3. Under **Output Ports**, tick your USB dongle (e.g. `Enttec Usb Pro Device`)
+4. Click **Save**
+
+![OLA Universe Settings — ArtNet input patched to ENTTEC output](_img/canvas2DMX_screenshot_7.1.png)
+
+### Running the HardwareOLA example
+
+Open `File → Examples → Canvas2DMX → HardwareOLA` and set:
+
+```java
+int ART_NET_UNIVERSE = 1;   // match the Universe ID you created above
+String DMX_CHANNEL_PATTERN = "grb";   // SP201E / WS2812/WS2815 raw strip
+float DMX_RESPONSE = 2.6;             // gamma for linear LED chips
+```
+
+Run the sketch. Check the **DMX Monitor** tab in OLA — you should see live channel values updating as the animation runs:
+
+![OLA DMX Monitor — live channel values from Processing](_img/canvas2DMX_screenshot_7.2.png)
+
+Channels 1–24 show active GRB values for the 8-LED ring (3 channels × 8 LEDs). Everything above channel 24 stays at 0 — clean output with no leakage into unused channels.
+
+### Why use OLA?
+
+| Direct (dmxP512 / DMX4Artists) | Via OLA |
+|---|---|
+| One library per dongle type | Any dongle, same sketch |
+| Serial port string in code | No port config needed |
+| Swap dongle → change code | Swap dongle → repatch in browser |
+| Works offline, no daemon | Requires `olad` running |
+
+> **SP201E note:** the SP201E maps DMX channels directly to LED colour data, 3 channels per LED, with no dimmer or strobe channels. Always use `"grb"` or `"rgb"` — never `"drgb"` or `"drgbsc"` — otherwise the dimmer value shifts every LED's colour data and the strip outputs black.
+
+---
+
+## 7. Next Steps
 
 Try the **examples** included with the library:
 

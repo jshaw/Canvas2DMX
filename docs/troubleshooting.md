@@ -38,33 +38,35 @@ Quick fixes for common issues when using **Canvas2DMX** with Processing.
 
 ## 🔌 DMX not connecting (no light output)
 
-**Likely:** Wrong device selection, drivers, or permissions.
+**First: identify your dongle type.** The two most common dongles need completely different code paths.
 
-**Fix**
+| Symptom | Likely cause |
+|---|---|
+| ENTTEC Pro connected, nothing lights up | Wrong library — use dmxP512, not DMX4Artists |
+| FT232RL dongle connected, nothing lights up | Wrong library — use DMX4Artists, not dmxP512 |
+| Port opens but fixture doesn’t respond | Wrong baud rate, wrong port prefix, or fixture not in DMX mode |
+| Port won’t open at all | Driver not installed, wrong port name, or permissions |
 
-1. Try alternate initializers (DMX4Artists):
+**ENTTEC USB Pro** (and compatible pro-grade dongles) → use **dmxP512**:
+- Set `USE_ENTTEC_PRO = true` in any example
+- Port must use `cu.` prefix on macOS: `/dev/cu.usbserial-XXXXXXXX`
+- Baud rate must be `115000`
 
-   ```java
-   dmx = new DMXControl(0, 512);                          // first device
-   dmx = new DMXControl("SERIAL_NUMBER", 512);            // by serial
-   dmx = new DMXControl("/dev/tty.usbserial-XXXX", 512);  // explicit path
-   ```
-2. Verify you’re sending:
+**FT232RL dongles** (cheap USB cables, FreeStyler, Amazon "USB to DMX 512") → use **DMX4Artists**:
+- Set `USE_ENTTEC_PRO = false`, or use the `HardwareOpenDMX` example
+- Install the FTDI VCP driver if the port doesn’t appear: https://ftdichip.com/drivers/vcp-drivers/
+- Device is auto-detected by index — no port string needed
 
-   ```java
-   if (dmx != null) c2d.sendToDmx((ch, val) -> dmx.sendValue(ch, val));
-   ```
-3. OS tips:
+**OS tips:**
+- **macOS:** System Settings → Privacy & Security → allow serial access
+- **Windows:** Install FTDI or ENTTEC drivers, check Device Manager for COM port
+- **Linux:** `sudo usermod -aG dialout $USER`, check `/dev/ttyUSB*`
 
-   * **macOS:** System Settings → Privacy & Security (allow serial).
-   * **Windows:** Install FTDI/ENTTEC drivers, check COM port.
-   * **Linux:** Add user to `dialout`/`uucp`, check `/dev/ttyUSB*` perms.
-4. Prove data is generated:
-
-   ```java
-   int[] frame = c2d.buildDmxFrame(32);
-   println(java.util.Arrays.toString(frame));
-   ```
+**Prove data is being generated (works for any backend):**
+```java
+int[] frame = c2d.buildDmxFrame(32);
+println(java.util.Arrays.toString(frame));
+```
 
 ---
 
@@ -130,11 +132,33 @@ Ensure you don’t clear the screen **after** `getLedColors()`.
 
 ---
 
+## 💡 LED strip updates roll down the strip (cascade/tearing effect)
+
+**Cause:** Libraries like dmxP512 send DMX on an internal timer thread. If that timer fires while `sendToDmx()` is mid-loop, the first LEDs go out in one DMX frame and the rest in the next — you see the update visibly propagating.
+
+**Fix:** Use `buildDmxFrame()` to pre-compute the complete frame, then write it to the backend in one tight loop:
+
+```java
+void sendDmx() {
+  int[] frame = c2d.buildDmxFrame(DMX_UNIVERSE);
+  for (int i = 0; i < frame.length; i++) {
+    dmxPro.set(i + DMX_OFFSET, frame[i]);
+  }
+}
+```
+
+This minimises the window in which the timer thread can interrupt between channel writes.
+
+> **Note:** If the rolling effect persists, check your DMX→SPI translator's settings. Some devices (e.g. SP201E) have a **streaming mode** that pushes SPI data as each DMX channel arrives, and a **buffered mode** that waits for a full frame before outputting. Streaming mode will always roll — switch to buffered mode in the device's DIP switch settings.
+
+---
+
 ## 🏃 Low performance / high CPU
 
 **Fix**
 
 * Map fewer LEDs, simplify drawing.
+* Avoid per-pixel drawing with `line()` or `stroke()` in `draw()` — use `pixels[]` or a pre-built `PImage` instead.
 * Limit frame rate:
 
   ```java

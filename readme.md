@@ -47,32 +47,57 @@ Inspired by [FadeCandy](https://github.com/scanlime/fadecandy) and [Open Pixel C
 
 ---
 
+## 🔌 Which dongle do I have?
+
+Two families of USB DMX dongle exist and they need different libraries. Every example has a single flag to switch between them:
+
+| Dongle | Library | `USE_ENTTEC_PRO` |
+|---|---|---|
+| **ENTTEC USB Pro** (or compatible pro-grade dongle) | **dmxP512** | `true` |
+| **FT232RL "Open DMX"** — cheap USB cable, Amazon "USB to DMX 512", FreeStyler dongle | **DMX4Artists** | `false` |
+| **Any dongle via OLA** — Open Lighting Architecture as middleware | UDP/Art-Net | use `HardwareOLA` example |
+
+> Install both **dmxP512** and **DMX4Artists** via `Sketch → Import Library → Add Library` — all examples import both so both must be present to compile. You only use one at runtime.
+
+---
+
 ## 🚀 Basic Usage
 
 ```java
 import com.studiojordanshaw.canvas2dmx.*;
-import com.jaysonh.dmx4artists.*;
+import dmxP512.*;                    // for ENTTEC USB Pro  (install via Library Manager)
+import processing.serial.*;          // required by dmxP512
+import com.jaysonh.dmx4artists.*;   // for FT232RL cheap dongles  (install via Library Manager)
+
+// ── SET THESE FOR YOUR SETUP ──────────────────────────────────────────────
+boolean USE_ENTTEC_PRO      = true;   // true = ENTTEC Pro  |  false = FT232RL dongle
+String  DMX_PORT            = "/dev/cu.usbserial-XXXXXXXX"; // ENTTEC Pro port (Mac)
+int     DMX_BAUDRATE        = 115000; // ENTTEC Pro baud rate — do not change
+int     DMX_UNIVERSE        = 512;
+int     DMX_OFFSET          = 1;      // standard for ENTTEC Pro via dmxP512
+String  DMX_CHANNEL_PATTERN = "drgb"; // match your fixture's channel map
+// ─────────────────────────────────────────────────────────────────────────
 
 Canvas2DMX c2d;
-DMXControl dmx;
+DmxP512    dmxPro;   // used when USE_ENTTEC_PRO = true
+DMXControl dmxOpen;  // used when USE_ENTTEC_PRO = false
 
 void setup() {
   size(400, 200);
   pixelDensity(1); // important for accurate color sampling on HiDPI screens
 
+  if (USE_ENTTEC_PRO) {
+    dmxPro = new DmxP512(this, DMX_UNIVERSE, false);
+    dmxPro.setupDmxPro(DMX_PORT, DMX_BAUDRATE);
+  } else {
+    dmxOpen = new DMXControl(0, DMX_UNIVERSE); // 0 = first FT232RL device found
+  }
+
   c2d = new Canvas2DMX(this);
   c2d.mapLedStrip(0, 8, width/2f, height/2f, 40, 0, false);
-
-  c2d.setChannelPattern("drgb");   // Dimmer + RGB
-  c2d.setDefaultValue('d', 255);   // Dimmer full
-  c2d.setStartAt(1);               // Start at DMX channel 1
-
-  try {
-    dmx = new DMXControl(0, 512);  // connect to first available DMX device
-  } catch (Exception e) {
-    println("DMX init failed: " + e.getMessage());
-    dmx = null;
-  }
+  c2d.setChannelPattern(DMX_CHANNEL_PATTERN);
+  c2d.setDefaultValue('d', 255); // dimmer full on
+  c2d.setStartAt(1);
 }
 
 void draw() {
@@ -83,12 +108,18 @@ void draw() {
   c2d.visualize(colors);
   c2d.showLedLocations();
 
-  if (dmx != null) {
-    // agnostic sender: DMX4Artists, ENTTEC, or your own backend
-    c2d.sendToDmx((ch, val) -> dmx.sendValue(ch, val));
+  sendDmx();
+}
+
+// Branches on USE_ENTTEC_PRO to call the right library
+void sendDmx() {
+  if (USE_ENTTEC_PRO) {
+    c2d.sendToDmx((ch, val) -> dmxPro.set(ch + DMX_OFFSET - 1, val));
+  } else {
+    c2d.sendToDmx((ch, val) -> dmxOpen.sendValue(ch, val));
   }
 }
-````
+```
 
 ---
 
@@ -138,17 +169,19 @@ void draw() {
 
 ## 🧩 Examples
 
-The library ships with 5 examples, found in the Processing IDE under
+The library ships with examples, found in the Processing IDE under
 **File → Examples → Contributed Libraries → Canvas2DMX**.
 
-* **Basics.pde** — one mapped LED, one sampled color, console DMX preview
-* **StripMapping.pde** — a linear strip with reversible wiring and DMX frame preview
-* **OffscreenBuffer.pde** — sample from a `PGraphics` buffer with `setCanvasSize()`
-* **PolygonMapping.pde** — fill arbitrary shapes and inspect scanline ordering
-* **InteractiveDemo.pde** — drag a live color source around a ring and switch fixture patterns
+* **Basics** — the smallest possible sketch: one LED, one sampled color, live DMX output
+* **StripMapping** — linear strip with reversible wiring and scrolling rainbow background
+* **OffscreenBuffer** — sample from a `PGraphics` buffer with `setCanvasSize()`
+* **PolygonMapping** — fill arbitrary shapes; interactive wiring direction and spacing controls
+* **InteractiveDemo** — drag a color orb around a ring; press 1/2/3 to switch channel patterns
+* **ColorBandTest** — diagnostic sketch: 4 solid color bands to verify channel mapping and gamma
+* **HardwareOpenDMX** — FT232RL dongle only, using DMX4Artists directly
+* **HardwareOLA** — any dongle via OLA middleware; sends Art-Net UDP to localhost
 
-Each example will run without hardware (console shows mock DMX output).
-When a DMX controller is connected, `sendToDmx(...)` sends live data.
+All examples use the `USE_ENTTEC_PRO` flag — set it to `true` for ENTTEC Pro or `false` for FT232RL dongles.
 
 ---
 
@@ -308,27 +341,47 @@ c2d.setCustomCurve(customCurve);
 
 ## ⚠️ Troubleshooting
 
-**Colors wrong or always white**
-
-* Ensure `pixelDensity(1)` in `setup()`
-* Use `'l'` key in examples to check LED positions
-* Verify your fixture’s DMX channel pattern
-
-**DMX not connecting**
-
-* Try alternate init methods:
-
+**Colors look washed out / pastel on LED strips**
+* WS2812/WS2815 LEDs have linear output but human vision is perceptual — add gamma correction:
   ```java
-  new DMXControl(0, 256);                       // device index
-  new DMXControl("SERIAL_NUMBER", 256);         // serial
-  new DMXControl("/dev/tty.usbserial-XXX", 256); // port path
+  c2d.setResponse(2.2); // or up to 2.6; start here for WS2815 via SP201E
+  ```
+* Use `ColorBandTest` with `setResponse(1.0)` to verify raw channel mapping first, then dial in gamma.
+
+**Red and green are swapped on the fixture**
+* Your LED chip is GRB order — swap `r↔g` in the pattern:
+  ```java
+  c2d.setChannelPattern("dgrb");   // was "drgb"
+  c2d.setChannelPattern("dgrbsc"); // was "drgbsc"
   ```
 
-**Performance**
+**DMX not connecting**
+* Make sure you’re using the right library for your dongle:
+  - ENTTEC USB Pro → **dmxP512**, `USE_ENTTEC_PRO = true`
+  - FT232RL cheap dongle → **DMX4Artists**, `USE_ENTTEC_PRO = false`
+  - These are **not interchangeable** — using the wrong one will silently do nothing
+* On macOS, the port must use `cu.` prefix: `/dev/cu.usbserial-XXXXXXXX` (not `tty.`)
+* To list all connected serial ports, add `println(Serial.list());` to `setup()`
 
-* Reduce number of LEDs
-* Use `frameRate(30)`
-* Disable debug printing
+**LED strip updates roll/cascade down the strip**
+* dmxP512 sends DMX on a background timer thread. Use `buildDmxFrame()` for atomic updates:
+  ```java
+  int[] frame = c2d.buildDmxFrame(DMX_UNIVERSE);
+  for (int i = 0; i < frame.length; i++) dmxPro.set(i + DMX_OFFSET, frame[i]);
+  ```
+* Also check your DMX→SPI translator for a "buffered" vs "streaming" mode setting.
+
+**Colors wrong or always white**
+* Ensure `pixelDensity(1)` in `setup()`
+* Check LED positions with `c2d.showLedLocations()`
+* Sample *after* drawing — `getLedColors()` reads the current frame
+
+**Performance / slow updates**
+* Pre-build background images in `setup()` instead of redrawing per-pixel in `draw()`
+* Reduce LED count
+* Use `frameRate(30)` if 60fps isn’t needed
+
+See [troubleshooting.md](docs/troubleshooting.md) for the full guide.
 
 ---
 
