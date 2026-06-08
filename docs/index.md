@@ -7,6 +7,10 @@
   </div>
 </div>
 
+<a href="https://youtu.be/-gsM0a_rsXs?si=MXuY8Hiy-LBkyAh_">
+  <img src="_img/canvas2DMX_screenshot.jpg" alt="Canvas2DMX demo" style="width:100%;border-radius:4px;display:block;margin:0 0 2rem">
+</a>
+
 <hr class="section-divider">
 
 <p class="section-label">Features</p>
@@ -21,6 +25,33 @@
   <li>Off-screen buffer support</li>
   <li>Live debug visualization</li>
 </ul>
+
+<hr class="section-divider">
+
+<p class="section-label">Examples</p>
+
+<div class="gallery-grid">
+  <div class="gallery-item">
+    <img src="_img/canvas2DMX_screenshot_2.png" alt="Basics">
+    <div class="gallery-item-label">Basics</div>
+  </div>
+  <div class="gallery-item">
+    <img src="_img/canvas2DMX_screenshot_3.png" alt="Strip Mapping">
+    <div class="gallery-item-label">Strip Mapping</div>
+  </div>
+  <div class="gallery-item">
+    <img src="_img/canvas2DMX_screenshot_4.png" alt="Offscreen Buffer">
+    <div class="gallery-item-label">Offscreen Buffer</div>
+  </div>
+  <div class="gallery-item">
+    <img src="_img/canvas2DMX_screenshot_5.png" alt="Polygon Mapping">
+    <div class="gallery-item-label">Polygon Mapping</div>
+  </div>
+  <div class="gallery-item">
+    <img src="_img/canvas2DMX_screenshot_6.png" alt="Interactive Demo">
+    <div class="gallery-item-label">Interactive Demo</div>
+  </div>
+</div>
 
 <hr class="section-divider">
 
@@ -55,33 +86,6 @@ void draw() {
 ```
 
 [Full setup guide →](getting-started.md)
-
-<hr class="section-divider">
-
-<p class="section-label">Examples</p>
-
-<div class="gallery-grid">
-  <div class="gallery-item">
-    <img src="_img/canvas2DMX_screenshot_2.png" alt="Basics">
-    <div class="gallery-item-label">Basics</div>
-  </div>
-  <div class="gallery-item">
-    <img src="_img/canvas2DMX_screenshot_3.png" alt="Strip Mapping">
-    <div class="gallery-item-label">Strip Mapping</div>
-  </div>
-  <div class="gallery-item">
-    <img src="_img/canvas2DMX_screenshot_4.png" alt="Offscreen Buffer">
-    <div class="gallery-item-label">Offscreen Buffer</div>
-  </div>
-  <div class="gallery-item">
-    <img src="_img/canvas2DMX_screenshot_5.png" alt="Polygon Mapping">
-    <div class="gallery-item-label">Polygon Mapping</div>
-  </div>
-  <div class="gallery-item">
-    <img src="_img/canvas2DMX_screenshot_6.png" alt="Interactive Demo">
-    <div class="gallery-item-label">Interactive Demo</div>
-  </div>
-</div>
 
 <hr class="section-divider">
 
