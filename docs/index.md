@@ -137,6 +137,46 @@ This keeps LED sampling resolution independent from display resolution and makes
 
 ---
 
+## 🌟 Made with Canvas2DMX
+
+Real-world installations by [Studio Jordan Shaw](https://www.jordanshaw.com):
+
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem;margin:1.5rem 0">
+
+<a href="https://www.jordanshaw.com/home/constellation-range" style="text-decoration:none;color:inherit">
+<img src="_img/studiojordanshaw_constellation-range.jpg" alt="Constellation Range" style="width:100%;border-radius:6px;display:block">
+<strong>Constellation Range</strong><br>
+<small>Six illuminated faceted peaks with aurora gradients, responding to Bluetooth proximity — OCAD U Gala 2026</small>
+</a>
+
+<a href="https://www.jordanshaw.com/home/same-material-different-time" style="text-decoration:none;color:inherit">
+<img src="_img/studiojordanshaw_samematerial_differenttime.jpg" alt="Same Material / Different Time" style="width:100%;border-radius:6px;display:block">
+<strong>Same Material / Different Time</strong><br>
+<small>Anamorphic LED installation — addressable strips transform a tree into a sail through light and perspective</small>
+</a>
+
+<a href="https://www.jordanshaw.com/home/crosshatch" style="text-decoration:none;color:inherit">
+<img src="_img/studiojordanshaw_crosshatch.png" alt="Crosshatch" style="width:100%;border-radius:6px;display:block">
+<strong>Crosshatch</strong><br>
+<small>Kinetic interactive installation — handles alter lighting, shadows, and projected patterns in real time</small>
+</a>
+
+<a href="https://www.jordanshaw.com/home/signal" style="text-decoration:none;color:inherit">
+<img src="_img/studiojordanshaw_signal.png" alt="Signal" style="width:100%;border-radius:6px;display:block">
+<strong>Signal</strong><br>
+<small>Interactive light sculpture driven by open weather data and visitor interaction</small>
+</a>
+
+<a href="https://www.jordanshaw.com/home/rays" style="text-decoration:none;color:inherit">
+<img src="_img/studiojordanshaw_rays.jpg" alt="Rays" style="width:100%;border-radius:6px;display:block">
+<strong>Rays</strong><br>
+<small>Infrared-interactive public light sculpture celebrating post-pandemic community reconnection — Hamilton</small>
+</a>
+
+</div>
+
+---
+
 ## 🎥 Demo Video
 
 [![Watch the demo](_img/canvas2DMX_screenshot.jpg)](https://youtu.be/-gsM0a_rsXs?si=MXuY8Hiy-LBkyAh_)

@@ -385,6 +385,20 @@ See [troubleshooting.md](docs/troubleshooting.md) for the full guide.
 
 ---
 
+## 🌟 Made with Canvas2DMX
+
+Real-world installations by [Studio Jordan Shaw](https://www.jordanshaw.com) built using this library:
+
+| | |
+|---|---|
+| [![Constellation Range](docs/_img/studiojordanshaw_constellation-range.jpg)](https://www.jordanshaw.com/home/constellation-range) | **[Constellation Range](https://www.jordanshaw.com/home/constellation-range)** — Six illuminated faceted peaks glowing with aurora-like gradients, responding to nearby Bluetooth signals. OCAD U Gala, 2026. |
+| [![Same Material / Different Time](docs/_img/studiojordanshaw_samematerial_differenttime.jpg)](https://www.jordanshaw.com/home/same-material-different-time) | **[Same Material / Different Time](https://www.jordanshaw.com/home/same-material-different-time)** — Anamorphic LED installation transforming a tree into a sail through addressable strip lighting. Millennium Square. |
+| [![Crosshatch](docs/_img/studiojordanshaw_crosshatch.png)](https://www.jordanshaw.com/home/crosshatch) | **[Crosshatch](https://www.jordanshaw.com/home/crosshatch)** — Kinetic interactive light installation where handles alter lighting, shadows, and projected patterns in real time. |
+| [![Signal](docs/_img/studiojordanshaw_signal.png)](https://www.jordanshaw.com/home/signal) | **[Signal](https://www.jordanshaw.com/home/signal)** — Interactive light sculpture driven by open weather data and visitor interaction, exploring data transportation through the electromagnetic spectrum. |
+| [![Rays](docs/_img/studiojordanshaw_rays.jpg)](https://www.jordanshaw.com/home/rays) | **[Rays](https://www.jordanshaw.com/home/rays)** — Infrared-interactive public light sculpture celebrating post-pandemic community reconnection. Hamilton. |
+
+---
+
 ## 🗺 Roadmap / Missing Features
 
 * Built-in Art-Net / sACN adapters so users do not need to write their own sender bridge
