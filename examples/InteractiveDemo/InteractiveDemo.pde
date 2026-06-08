@@ -47,7 +47,7 @@ int    DMX_OFFSET   = 1;
 //   0 = "rgb"     plain RGB, no dimmer
 //   1 = "drgb"    dimmer + RGB  (common for single-head wash fixtures)
 //   2 = "drgbsc"  dimmer + RGB + strobe + color change  (common for par/wash fixtures)
-int    DMX_PATTERN_DEFAULT = 3;
+int    DMX_PATTERN_DEFAULT = 2;
 
 // ────────────────────────────────────────────────────────────────────────────
 
