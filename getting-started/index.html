@@ -1,0 +1,1427 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Map pixel colors from your Processing sketch canvas to DMX lighting fixtures in real time.">
+      
+      
+        <meta name="author" content="Jordan Shaw">
+      
+      
+        <link rel="canonical" href="https://jshaw.github.io/Canvas2DMX/getting-started/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../develop/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Getting Started - Canvas2DMX</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#getting-started-with-canvas2dmx" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Canvas2DMX" class="md-header__button md-logo" aria-label="Canvas2DMX" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Canvas2DMX
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Getting Started
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="purple"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/jshaw/Canvas2DMX" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jshaw/Canvas2DMX
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../develop/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Develop
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../release/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../troubleshooting/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Troubleshooting
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Canvas2DMX" class="md-nav__button md-logo" aria-label="Canvas2DMX" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Canvas2DMX
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/jshaw/Canvas2DMX" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jshaw/Canvas2DMX
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Requirements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#which-dongle-do-i-have" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which dongle do I have?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Installation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-your-first-sketch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Your First Sketch
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Your First Sketch">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#finding-your-serial-port-enttec-pro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finding your serial port (ENTTEC Pro)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-configuration-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Configuration Methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Configuration Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#canvas-size-off-screen-buffers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canvas Size (Off-Screen Buffers)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#channel-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Channel Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response-curve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Curve
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-working-with-off-screen-buffers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Working with Off-Screen Buffers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Working with Off-Screen Buffers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Points
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-using-ola-open-lighting-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Using OLA (Open Lighting Architecture)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Using OLA (Open Lighting Architecture)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-the-hardwareola-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running the HardwareOLA example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-use-ola" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why use OLA?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#learn-more" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 Learn More
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📜 License
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../develop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Develop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../release/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Requirements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#which-dongle-do-i-have" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which dongle do I have?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Installation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-your-first-sketch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Your First Sketch
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Your First Sketch">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#finding-your-serial-port-enttec-pro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finding your serial port (ENTTEC Pro)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-configuration-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Configuration Methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Configuration Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#canvas-size-off-screen-buffers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canvas Size (Off-Screen Buffers)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#channel-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Channel Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#response-curve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response Curve
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-working-with-off-screen-buffers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Working with Off-Screen Buffers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Working with Off-Screen Buffers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Points
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-using-ola-open-lighting-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Using OLA (Open Lighting Architecture)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Using OLA (Open Lighting Architecture)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-the-hardwareola-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running the HardwareOLA example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-use-ola" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why use OLA?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#learn-more" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 Learn More
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📜 License
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="getting-started-with-canvas2dmx">🚀 Getting Started with Canvas2DMX<a class="headerlink" href="#getting-started-with-canvas2dmx" title="Permanent link">&para;</a></h1>
+<p>Canvas2DMX lets you map pixels from your Processing sketch directly to DMX fixtures in real-time.<br />
+This quickstart will guide you through installation and your first test sketch.</p>
+<hr />
+<h2 id="1-requirements">1. Requirements<a class="headerlink" href="#1-requirements" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Processing 4.x</strong></li>
+<li><strong>A USB DMX dongle</strong> — see the table below to find your type</li>
+<li>macOS / Windows / Linux</li>
+</ul>
+<h3 id="which-dongle-do-i-have">Which dongle do I have?<a class="headerlink" href="#which-dongle-do-i-have" title="Permanent link">&para;</a></h3>
+<p>There are two families of USB DMX dongle and they need different libraries. Every example has a single flag — <code>USE_ENTTEC_PRO</code> — to switch between them.</p>
+<table>
+<thead>
+<tr>
+<th>Dongle type</th>
+<th>How to tell</th>
+<th>Library</th>
+<th><code>USE_ENTTEC_PRO</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ENTTEC USB Pro</strong> (or compatible)</td>
+<td>Has an onboard microcontroller; labeled "USB Pro", "DMX USB Pro", or "OpenDMX Pro"</td>
+<td><strong>dmxP512</strong></td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><strong>FT232RL "Open DMX"</strong></td>
+<td>Cheap transparent USB cable; "USB to DMX 512 Interface Adapter" on Amazon; FreeStyler dongle; any dongle built around an FT232RL chip</td>
+<td><strong>DMX4Artists</strong></td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><strong>Art-Net / OLA</strong></td>
+<td>You have Open Lighting Architecture installed as a middleware layer</td>
+<td>artnet4j (UDP)</td>
+<td>use <code>HardwareOLA</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Why two separate libraries?</strong><br />
+The ENTTEC USB Pro has an onboard microcontroller and speaks a proprietary packet protocol — <strong>dmxP512</strong> handles that.<br />
+Cheap FT232RL dongles are dumb USB→RS485 adapters with no microcontroller; the computer generates raw DMX timing itself — <strong>DMX4Artists</strong> does that via the FTDI driver.<br />
+They are <strong>not interchangeable</strong>: dmxP512 will not work with an FT232RL dongle, and DMX4Artists will not work with an ENTTEC Pro.</p>
+</blockquote>
+<hr />
+<h2 id="2-installation">2. Installation<a class="headerlink" href="#2-installation" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Install <strong>both</strong> DMX libraries in Processing (all examples import both, so both must be present to compile):</li>
+<li>Open Processing → <code>Sketch</code> → <code>Import Library</code> → <code>Add Library…</code></li>
+<li>Search for <strong>dmxP512</strong> (by Daniel Bonner) and install.</li>
+<li>Search for <strong>DMX4Artists</strong> (by Jayson Haebich) and install.</li>
+<li>
+<p>You only use one at runtime, selected by the <code>USE_ENTTEC_PRO</code> flag in each sketch.</p>
+</li>
+<li>
+<p>Download or clone the <strong>Canvas2DMX</strong> library:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/jshaw/Canvas2DMX.git
+</code></pre></div></p>
+</li>
+<li>
+<p>Copy the built library folder into your Processing libraries directory:</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Documents/Processing/libraries/
+</code></pre></div>
+<ol>
+<li>Restart Processing.
+   You should now see <strong>Canvas2DMX</strong> listed under <code>Sketch → Import Library</code>.</li>
+</ol>
+<hr />
+<h2 id="3-your-first-sketch">3. Your First Sketch<a class="headerlink" href="#3-your-first-sketch" title="Permanent link">&para;</a></h2>
+<p>Open the <strong><code>Basics</code></strong> example (<code>File → Examples → Contributed Libraries → Canvas2DMX → Basics</code>) and update the config block at the top to match your setup:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.studiojordanshaw.canvas2dmx.*</span><span class="p">;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">dmxP512.*</span><span class="p">;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">processing.serial.*</span><span class="p">;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.jaysonh.dmx4artists.*</span><span class="p">;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1">// ── Configure these for your setup ──────────────────────────────────────────</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1">//</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1">// USE_ENTTEC_PRO — which dongle type are you using?</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1">//   true  → ENTTEC USB Pro — uses dmxP512 library, connects via DMX_PORT</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1">//   false → FT232RL cheap dongle — uses DMX4Artists, auto-detected by USB index</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1">//</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="kt">boolean</span><span class="w"> </span><span class="n">USE_ENTTEC_PRO</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1">// DMX_PORT — serial port for ENTTEC Pro (only used when USE_ENTTEC_PRO=true).</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1">//   To list all ports: add  println(Serial.list());  to setup() and run.</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1">//   Mac: /dev/cu.usbserial-XXXXXXXX   Windows: COM3   Linux: /dev/ttyUSB0</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="n">String</span><span class="w"> </span><span class="n">DMX_PORT</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/dev/cu.usbserial-XXXXXXXX&quot;</span><span class="p">;</span><span class="w"> </span><span class="c1">// ← change this</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="kt">int</span><span class="w">    </span><span class="n">DMX_BAUDRATE</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="mi">115000</span><span class="p">;</span><span class="w">  </span><span class="c1">// ENTTEC Pro baud rate — do not change</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="kt">int</span><span class="w">    </span><span class="n">DMX_UNIVERSE</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="mi">512</span><span class="p">;</span><span class="w">     </span><span class="c1">// full DMX universe; max 512 channels</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1">// DMX_OFFSET — channel correction for dmxP512 (only used when USE_ENTTEC_PRO=true).</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="c1">//   1 = standard for ENTTEC Pro  |  0 = if channels arrive one step too high</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="kt">int</span><span class="w">    </span><span class="n">DMX_OFFSET</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="c1">// DMX_CHANNEL_PATTERN — must match your fixture’s channel map (check its manual).</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="c1">//   d=dimmer  r=red  g=green  b=blue  w=white  s=strobe  c=color change macro</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="c1">//   Common: &quot;rgb&quot;  &quot;grb&quot;  &quot;drgb&quot;  &quot;drgbsc&quot;  &quot;rgbw&quot;</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="n">String</span><span class="w"> </span><span class="n">DMX_CHANNEL_PATTERN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;drgb&quot;</span><span class="p">;</span><span class="w"> </span><span class="c1">// ← change this to match your fixture</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="c1">// ────────────────────────────────────────────────────────────────────────────</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="n">Canvas2DMX</span><span class="w"> </span><span class="n">c2d</span><span class="p">;</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="n">DmxP512</span><span class="w"> </span><span class="n">dmxPro</span><span class="p">;</span><span class="w">   </span><span class="c1">// used when USE_ENTTEC_PRO = true</span>
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="n">DMXControl</span><span class="w"> </span><span class="n">dmxOpen</span><span class="p">;</span><span class="w"> </span><span class="c1">// used when USE_ENTTEC_PRO = false</span>
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a><span class="kt">void</span><span class="w"> </span><span class="nf">settings</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="mi">320</span><span class="p">,</span><span class="w"> </span><span class="mi">220</span><span class="p">);</span><span class="w"> </span><span class="n">pixelDensity</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="kt">void</span><span class="w"> </span><span class="nf">setup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">USE_ENTTEC_PRO</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a><span class="w">    </span><span class="n">dmxPro</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DmxP512</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">DMX_UNIVERSE</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a><span class="w">    </span><span class="n">dmxPro</span><span class="p">.</span><span class="na">setupDmxPro</span><span class="p">(</span><span class="n">DMX_PORT</span><span class="p">,</span><span class="w"> </span><span class="n">DMX_BAUDRATE</span><span class="p">);</span>
+<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a><span class="w">    </span><span class="n">dmxOpen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DMXControl</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">DMX_UNIVERSE</span><span class="p">);</span><span class="w"> </span><span class="c1">// 0 = first detected FT232RL device</span>
+<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a><span class="w">  </span><span class="n">c2d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Canvas2DMX</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+<a id="__codelineno-2-47" name="__codelineno-2-47" href="#__codelineno-2-47"></a><span class="w">  </span><span class="n">c2d</span><span class="p">.</span><span class="na">setChannelPattern</span><span class="p">(</span><span class="n">DMX_CHANNEL_PATTERN</span><span class="p">);</span>
+<a id="__codelineno-2-48" name="__codelineno-2-48" href="#__codelineno-2-48"></a><span class="w">  </span><span class="n">c2d</span><span class="p">.</span><span class="na">setDefaultValue</span><span class="p">(</span><span class="err">‘</span><span class="n">d</span><span class="err">’</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">);</span>
+<a id="__codelineno-2-49" name="__codelineno-2-49" href="#__codelineno-2-49"></a><span class="w">  </span><span class="n">c2d</span><span class="p">.</span><span class="na">setStartAt</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<a id="__codelineno-2-50" name="__codelineno-2-50" href="#__codelineno-2-50"></a><span class="w">  </span><span class="n">c2d</span><span class="p">.</span><span class="na">setLed</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span>
+<a id="__codelineno-2-51" name="__codelineno-2-51" href="#__codelineno-2-51"></a><span class="p">}</span>
+<a id="__codelineno-2-52" name="__codelineno-2-52" href="#__codelineno-2-52"></a>
+<a id="__codelineno-2-53" name="__codelineno-2-53" href="#__codelineno-2-53"></a><span class="kt">void</span><span class="w"> </span><span class="nf">draw</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-54" name="__codelineno-2-54" href="#__codelineno-2-54"></a><span class="w">  </span><span class="n">background</span><span class="p">(</span><span class="n">frameCount</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p">);</span>
+<a id="__codelineno-2-55" name="__codelineno-2-55" href="#__codelineno-2-55"></a><span class="w">  </span><span class="kt">int</span><span class="o">[]</span><span class="w"> </span><span class="n">colors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c2d</span><span class="p">.</span><span class="na">getLedColors</span><span class="p">();</span>
+<a id="__codelineno-2-56" name="__codelineno-2-56" href="#__codelineno-2-56"></a><span class="w">  </span><span class="n">c2d</span><span class="p">.</span><span class="na">visualize</span><span class="p">(</span><span class="n">colors</span><span class="p">);</span>
+<a id="__codelineno-2-57" name="__codelineno-2-57" href="#__codelineno-2-57"></a><span class="w">  </span><span class="n">c2d</span><span class="p">.</span><span class="na">showLedLocations</span><span class="p">();</span>
+<a id="__codelineno-2-58" name="__codelineno-2-58" href="#__codelineno-2-58"></a><span class="w">  </span><span class="n">sendDmx</span><span class="p">();</span>
+<a id="__codelineno-2-59" name="__codelineno-2-59" href="#__codelineno-2-59"></a><span class="p">}</span>
+<a id="__codelineno-2-60" name="__codelineno-2-60" href="#__codelineno-2-60"></a>
+<a id="__codelineno-2-61" name="__codelineno-2-61" href="#__codelineno-2-61"></a><span class="c1">// sendDmx() — branches on USE_ENTTEC_PRO to call the right library.</span>
+<a id="__codelineno-2-62" name="__codelineno-2-62" href="#__codelineno-2-62"></a><span class="c1">// This pattern is used in all Canvas2DMX examples.</span>
+<a id="__codelineno-2-63" name="__codelineno-2-63" href="#__codelineno-2-63"></a><span class="kt">void</span><span class="w"> </span><span class="nf">sendDmx</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-64" name="__codelineno-2-64" href="#__codelineno-2-64"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">USE_ENTTEC_PRO</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-65" name="__codelineno-2-65" href="#__codelineno-2-65"></a><span class="w">    </span><span class="n">c2d</span><span class="p">.</span><span class="na">sendToDmx</span><span class="p">((</span><span class="n">ch</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">dmxPro</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="n">ch</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">DMX_OFFSET</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="p">));</span>
+<a id="__codelineno-2-66" name="__codelineno-2-66" href="#__codelineno-2-66"></a><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-67" name="__codelineno-2-67" href="#__codelineno-2-67"></a><span class="w">    </span><span class="n">c2d</span><span class="p">.</span><span class="na">sendToDmx</span><span class="p">((</span><span class="n">ch</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">dmxOpen</span><span class="p">.</span><span class="na">sendValue</span><span class="p">(</span><span class="n">ch</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="p">));</span>
+<a id="__codelineno-2-68" name="__codelineno-2-68" href="#__codelineno-2-68"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-2-69" name="__codelineno-2-69" href="#__codelineno-2-69"></a><span class="p">}</span>
+</code></pre></div>
+<p>Run the sketch — you’ll see LED markers drawn over your canvas and a color swatch strip at the bottom. If your dongle is connected and configured correctly, the fixture will respond immediately.</p>
+<h3 id="finding-your-serial-port-enttec-pro">Finding your serial port (ENTTEC Pro)<a class="headerlink" href="#finding-your-serial-port-enttec-pro" title="Permanent link">&para;</a></h3>
+<p>Add this line to <code>setup()</code>, run the sketch, and check the Processing console:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">println</span><span class="p">(</span><span class="n">Serial</span><span class="p">.</span><span class="na">list</span><span class="p">());</span>
+</code></pre></div>
+<p>On macOS the ENTTEC Pro typically appears as <code>/dev/cu.usbserial-XXXXXXXX</code>. Use the <code>cu.</code> prefix — not <code>tty.</code> — for outgoing serial connections.</p>
+<hr />
+<hr />
+<h2 id="4-configuration-methods">4. Configuration Methods<a class="headerlink" href="#4-configuration-methods" title="Permanent link">&para;</a></h2>
+<p>Canvas2DMX provides several methods to configure how colors are sampled and sent to DMX:</p>
+<h3 id="canvas-size-off-screen-buffers">Canvas Size (Off-Screen Buffers)<a class="headerlink" href="#canvas-size-off-screen-buffers" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">c2d</span><span class="p">.</span><span class="na">setCanvasSize</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">width</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">height</span><span class="p">);</span>
+</code></pre></div>
+<p>Set custom canvas dimensions for LED mapping. <strong>Use this when sampling from a <code>PGraphics</code> buffer</strong> that has different dimensions than your sketch window. By default, Canvas2DMX uses the sketch's <code>width</code> and <code>height</code>.</p>
+<h3 id="channel-pattern">Channel Pattern<a class="headerlink" href="#channel-pattern" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">c2d</span><span class="p">.</span><span class="na">setChannelPattern</span><span class="p">(</span><span class="s">&quot;drgb&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// dimmer + RGB</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">c2d</span><span class="p">.</span><span class="na">setChannelPattern</span><span class="p">(</span><span class="s">&quot;rgb&quot;</span><span class="p">);</span><span class="w">   </span><span class="c1">// just RGB (default)</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">c2d</span><span class="p">.</span><span class="na">setChannelPattern</span><span class="p">(</span><span class="s">&quot;rgbw&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// RGB + white</span>
+</code></pre></div>
+<h3 id="default-values">Default Values<a class="headerlink" href="#default-values" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">c2d</span><span class="p">.</span><span class="na">setDefaultValue</span><span class="p">(</span><span class="sc">&#39;d&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">);</span><span class="w">  </span><span class="c1">// dimmer at full</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">c2d</span><span class="p">.</span><span class="na">setDefaultValue</span><span class="p">(</span><span class="sc">&#39;s&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w">    </span><span class="c1">// strobe off</span>
+</code></pre></div>
+<h3 id="response-curve">Response Curve<a class="headerlink" href="#response-curve" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">c2d</span><span class="p">.</span><span class="na">setResponse</span><span class="p">(</span><span class="mf">2.2</span><span class="p">);</span><span class="w">           </span><span class="c1">// gamma correction</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">c2d</span><span class="p">.</span><span class="na">setTemperature</span><span class="p">(</span><span class="o">-</span><span class="mf">0.3</span><span class="p">);</span><span class="w">       </span><span class="c1">// warm color shift</span>
+</code></pre></div>
+<hr />
+<h2 id="5-working-with-off-screen-buffers">5. Working with Off-Screen Buffers<a class="headerlink" href="#5-working-with-off-screen-buffers" title="Permanent link">&para;</a></h2>
+<p>For advanced workflows, you can sample from a <code>PGraphics</code> buffer instead of the main canvas. This is useful when you want to keep LED mapping resolution independent from display resolution.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.studiojordanshaw.canvas2dmx.*</span><span class="p">;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">Canvas2DMX</span><span class="w"> </span><span class="n">c2d</span><span class="p">;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="n">PGraphics</span><span class="w"> </span><span class="n">ledBuffer</span><span class="p">;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="kt">void</span><span class="w"> </span><span class="nf">setup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="n">size</span><span class="p">(</span><span class="mi">800</span><span class="p">,</span><span class="w"> </span><span class="mi">600</span><span class="p">);</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="c1">// Create a smaller buffer for LED sampling</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span><span class="n">ledBuffer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">createGraphics</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">);</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span><span class="n">c2d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Canvas2DMX</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span><span class="c1">// IMPORTANT: Tell Canvas2DMX the buffer dimensions</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span><span class="n">c2d</span><span class="p">.</span><span class="na">setCanvasSize</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">);</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">  </span><span class="c1">// Map LEDs relative to buffer coordinates</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">  </span><span class="n">c2d</span><span class="p">.</span><span class="na">mapLedStrip</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="p">}</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="kt">void</span><span class="w"> </span><span class="nf">draw</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">  </span><span class="c1">// Draw to the off-screen buffer</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="w">  </span><span class="n">ledBuffer</span><span class="p">.</span><span class="na">beginDraw</span><span class="p">();</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="w">  </span><span class="n">ledBuffer</span><span class="p">.</span><span class="na">background</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="w">  </span><span class="n">ledBuffer</span><span class="p">.</span><span class="na">fill</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="w">  </span><span class="n">ledBuffer</span><span class="p">.</span><span class="na">ellipse</span><span class="p">(</span>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="w">    </span><span class="n">map</span><span class="p">(</span><span class="n">mouseX</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">),</span>
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="w">    </span><span class="n">map</span><span class="p">(</span><span class="n">mouseY</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">),</span>
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a><span class="w">    </span><span class="mi">30</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span>
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="w">  </span><span class="p">);</span>
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a><span class="w">  </span><span class="n">ledBuffer</span><span class="p">.</span><span class="na">endDraw</span><span class="p">();</span>
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>
+<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a><span class="w">  </span><span class="c1">// Display buffer scaled up to window</span>
+<a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a><span class="w">  </span><span class="n">image</span><span class="p">(</span><span class="n">ledBuffer</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="p">);</span>
+<a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a>
+<a id="__codelineno-8-36" name="__codelineno-8-36" href="#__codelineno-8-36"></a><span class="w">  </span><span class="c1">// Sample from the buffer&#39;s pixels</span>
+<a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a><span class="w">  </span><span class="n">ledBuffer</span><span class="p">.</span><span class="na">loadPixels</span><span class="p">();</span>
+<a id="__codelineno-8-38" name="__codelineno-8-38" href="#__codelineno-8-38"></a><span class="w">  </span><span class="kt">int</span><span class="o">[]</span><span class="w"> </span><span class="n">colors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c2d</span><span class="p">.</span><span class="na">getLedColors</span><span class="p">(</span><span class="n">ledBuffer</span><span class="p">.</span><span class="na">pixels</span><span class="p">);</span>
+<a id="__codelineno-8-39" name="__codelineno-8-39" href="#__codelineno-8-39"></a>
+<a id="__codelineno-8-40" name="__codelineno-8-40" href="#__codelineno-8-40"></a><span class="w">  </span><span class="n">c2d</span><span class="p">.</span><span class="na">visualize</span><span class="p">(</span><span class="n">colors</span><span class="p">);</span>
+<a id="__codelineno-8-41" name="__codelineno-8-41" href="#__codelineno-8-41"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="key-points">Key Points<a class="headerlink" href="#key-points" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Call <code>setCanvasSize()</code> <strong>before</strong> mapping LEDs</li>
+<li>LED coordinates should be relative to the buffer size, not the window size</li>
+<li>Use <code>getLedColors(buffer.pixels)</code> to sample from the buffer</li>
+<li>Don't forget to call <code>buffer.loadPixels()</code> before sampling</li>
+</ul>
+<hr />
+<h2 id="6-using-ola-open-lighting-architecture">6. Using OLA (Open Lighting Architecture)<a class="headerlink" href="#6-using-ola-open-lighting-architecture" title="Permanent link">&para;</a></h2>
+<p>OLA is middleware that sits between Processing and your USB dongle. Instead of talking to the dongle directly, your sketch sends <strong>Art-Net UDP packets</strong> to OLA on localhost — OLA then drives whatever hardware is patched to that universe. This means you can swap dongles without changing a line of code.</p>
+<p><strong>Works with:</strong> ENTTEC USB Pro, FT232RL Open DMX, and most other dongles.</p>
+<h3 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>brew<span class="w"> </span>install<span class="w"> </span>ola<span class="w">        </span><span class="c1"># macOS (Homebrew)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>olad<span class="w"> </span>-l<span class="w"> </span><span class="m">3</span><span class="w">               </span><span class="c1"># start the OLA daemon</span>
+</code></pre></div>
+<p>Then open <strong>http://localhost:9090</strong> in a browser:</p>
+<ol>
+<li>Click <strong>Add Universe</strong>, set Universe ID to <code>1</code>, name it anything (e.g. <code>canvas2DMX</code>)</li>
+<li>Under <strong>Input Ports</strong>, tick <strong>ArtNet</strong> — it will show <code>ArtNet Universe 0:0:1</code></li>
+<li>Under <strong>Output Ports</strong>, tick your USB dongle (e.g. <code>Enttec Usb Pro Device</code>)</li>
+<li>Click <strong>Save</strong></li>
+</ol>
+<p><img alt="OLA Universe Settings — ArtNet input patched to ENTTEC output" src="../_img/canvas2DMX_screenshot_7.1.png" /></p>
+<h3 id="running-the-hardwareola-example">Running the HardwareOLA example<a class="headerlink" href="#running-the-hardwareola-example" title="Permanent link">&para;</a></h3>
+<p>Open <code>File → Examples → Canvas2DMX → HardwareOLA</code> and set:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kt">int</span><span class="w"> </span><span class="n">ART_NET_UNIVERSE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">   </span><span class="c1">// match the Universe ID you created above</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">String</span><span class="w"> </span><span class="n">DMX_CHANNEL_PATTERN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;grb&quot;</span><span class="p">;</span><span class="w">   </span><span class="c1">// SP201E / WS2812/WS2815 raw strip</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="kt">float</span><span class="w"> </span><span class="n">DMX_RESPONSE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.6</span><span class="p">;</span><span class="w">             </span><span class="c1">// gamma for linear LED chips</span>
+</code></pre></div>
+<p>Run the sketch. Check the <strong>DMX Monitor</strong> tab in OLA — you should see live channel values updating as the animation runs:</p>
+<p><img alt="OLA DMX Monitor — live channel values from Processing" src="../_img/canvas2DMX_screenshot_7.2.png" /></p>
+<p>Channels 1–24 show active GRB values for the 8-LED ring (3 channels × 8 LEDs). Everything above channel 24 stays at 0 — clean output with no leakage into unused channels.</p>
+<h3 id="why-use-ola">Why use OLA?<a class="headerlink" href="#why-use-ola" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Direct (dmxP512 / DMX4Artists)</th>
+<th>Via OLA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>One library per dongle type</td>
+<td>Any dongle, same sketch</td>
+</tr>
+<tr>
+<td>Serial port string in code</td>
+<td>No port config needed</td>
+</tr>
+<tr>
+<td>Swap dongle → change code</td>
+<td>Swap dongle → repatch in browser</td>
+</tr>
+<tr>
+<td>Works offline, no daemon</td>
+<td>Requires <code>olad</code> running</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>SP201E note:</strong> the SP201E maps DMX channels directly to LED colour data, 3 channels per LED, with no dimmer or strobe channels. Always use <code>"grb"</code> or <code>"rgb"</code> — never <code>"drgb"</code> or <code>"drgbsc"</code> — otherwise the dimmer value shifts every LED's colour data and the strip outputs black.</p>
+</blockquote>
+<hr />
+<h2 id="7-next-steps">7. Next Steps<a class="headerlink" href="#7-next-steps" title="Permanent link">&para;</a></h2>
+<p>Try the <strong>examples</strong> included with the library:</p>
+<ul>
+<li><code>Basics</code> — the smallest possible sampling sketch</li>
+<li><code>StripMapping</code> — linear layouts and DMX frame preview</li>
+<li><code>OffscreenBuffer</code> — <code>PGraphics</code> workflows with <code>setCanvasSize()</code></li>
+<li><code>PolygonMapping</code> — arbitrary shapes and fill ordering</li>
+<li><code>InteractiveDemo</code> — live fixture-pattern exploration</li>
+</ul>
+<p>Check out:</p>
+<ul>
+<li><a href="../release/">Advanced Features</a> for packaging and release steps</li>
+<li><a href="../troubleshooting/">Troubleshooting</a> if your DMX isn’t working</li>
+</ul>
+<hr />
+<p>✅ That’s it! You’re ready to build interactive Processing sketches that control DMX lighting in real time.</p>
+<hr />
+<h2 id="learn-more">📚 Learn More<a class="headerlink" href="#learn-more" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><a href="https://github.com/jshaw/Canvas2DMX">Canvas2DMX</a></strong> — repo link</li>
+<li><a href="./">Getting Started</a> — installation and first sketch</li>
+<li><a href="../troubleshooting/">Troubleshooting</a> — common issues and fixes</li>
+<li><a href="../develop/">Develop</a> — contributing and building from source</li>
+<li><a href="../release/">Release</a> — packaging and Contribution Manager</li>
+</ul>
+<hr />
+<h2 id="license">📜 License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h2>
+<p>MIT License © 2025 <a href="https://www.jordanshaw.com/">Studio Jordan Shaw</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.top", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://processing.github.io/processing-library-template/index.html</loc>
-         <lastmod>2026-05-24</lastmod>
+         <loc>https://jshaw.github.io/Canvas2DMX/</loc>
+         <lastmod>2026-06-08</lastmod>
     </url>
     <url>
-         <loc>https://processing.github.io/processing-library-template/develop.html</loc>
-         <lastmod>2026-05-24</lastmod>
+         <loc>https://jshaw.github.io/Canvas2DMX/develop/</loc>
+         <lastmod>2026-06-08</lastmod>
     </url>
     <url>
-         <loc>https://processing.github.io/processing-library-template/getting-started.html</loc>
-         <lastmod>2026-05-24</lastmod>
+         <loc>https://jshaw.github.io/Canvas2DMX/getting-started/</loc>
+         <lastmod>2026-06-08</lastmod>
     </url>
     <url>
-         <loc>https://processing.github.io/processing-library-template/release.html</loc>
-         <lastmod>2026-05-24</lastmod>
+         <loc>https://jshaw.github.io/Canvas2DMX/release/</loc>
+         <lastmod>2026-06-08</lastmod>
     </url>
     <url>
-         <loc>https://processing.github.io/processing-library-template/troubleshooting.html</loc>
-         <lastmod>2026-05-24</lastmod>
+         <loc>https://jshaw.github.io/Canvas2DMX/troubleshooting/</loc>
+         <lastmod>2026-06-08</lastmod>
     </url>
 </urlset>
