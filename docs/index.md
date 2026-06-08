@@ -7,8 +7,8 @@
   </div>
 </div>
 
-<a href="https://youtu.be/-gsM0a_rsXs?si=MXuY8Hiy-LBkyAh_">
-  <img src="_img/canvas2DMX_screenshot.jpg" alt="Canvas2DMX demo" style="width:100%;border-radius:4px;display:block;margin:0 0 2rem">
+<a class="demo-thumb" href="https://youtu.be/-gsM0a_rsXs?si=MXuY8Hiy-LBkyAh_">
+  <img class="hero-img" src="_img/canvas2DMX_screenshot.jpg" alt="Canvas2DMX in action">
 </a>
 
 <hr class="section-divider">
@@ -91,13 +91,15 @@ void draw() {
 
 <p class="section-label">Demo</p>
 
-[![Watch the demo](_img/canvas2DMX_screenshot.jpg)](https://youtu.be/-gsM0a_rsXs?si=MXuY8Hiy-LBkyAh_)
+<a class="demo-thumb" href="https://youtu.be/-gsM0a_rsXs?si=MXuY8Hiy-LBkyAh_">
+  <img src="_img/canvas2DMX_screenshot.jpg" alt="Watch the demo">
+</a>
 
 <hr class="section-divider">
 
 <p class="section-label">Made with Canvas2DMX</p>
 
-<p>Installations built using this library — <a href="https://www.jordanshaw.com">Studio Jordan Shaw</a></p>
+<p style="font-size:0.85rem;color:var(--sjsw-subtle);margin:0 0 1rem">Installations built using this library — <a href="https://www.jordanshaw.com">Studio Jordan Shaw</a></p>
 
 <div class="project-grid">
 
