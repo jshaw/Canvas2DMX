@@ -300,8 +300,8 @@ Try the **examples** included with the library:
 
 Check out:
 
-- [Advanced Features](release.md) for packaging and release steps
-- [Troubleshooting](troubleshooting.md) if your DMX isn’t working
+- [Advanced Features](release.html) for packaging and release steps
+- [Troubleshooting](troubleshooting.html) if your DMX isn’t working
 
 ---
 
@@ -312,10 +312,10 @@ Check out:
 ## 📚 Learn More
 
 * **[Canvas2DMX](https://github.com/jshaw/Canvas2DMX)** — repo link
-* [Getting Started](getting-started.md) — installation and first sketch
-* [Troubleshooting](troubleshooting.md) — common issues and fixes
-* [Develop](develop.md) — contributing and building from source
-* [Release](release.md) — packaging and Processing Library Manager submission
+* [Getting Started](getting-started.html) — installation and first sketch
+* [Troubleshooting](troubleshooting.html) — common issues and fixes
+* [Develop](develop.html) — contributing and building from source
+* [Release](release.html) — packaging and Processing Library Manager submission
 
 ---
 

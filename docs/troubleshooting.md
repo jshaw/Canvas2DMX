@@ -232,10 +232,10 @@ if (frameCount % 30 == 0) {
 ## 📚 Learn More
 
 * **[Canvas2DMX](https://github.com/jshaw/Canvas2DMX)** — repo link
-* [Getting Started](getting-started.md) — installation and first sketch
-* [Troubleshooting](troubleshooting.md) — common issues and fixes
-* [Develop](develop.md) — contributing and building from source
-* [Release](release.md) — packaging and Processing Library Manager submission
+* [Getting Started](getting-started.html) — installation and first sketch
+* [Troubleshooting](troubleshooting.html) — common issues and fixes
+* [Develop](develop.html) — contributing and building from source
+* [Release](release.html) — packaging and Processing Library Manager submission
 
 ---
 

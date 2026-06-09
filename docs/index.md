@@ -2,7 +2,7 @@
   <h1>Canvas2DMX</h1>
   <p>A Processing library for mapping canvas pixels to DMX lighting fixtures in real time. Define LED layouts, apply colour correction, and send to any DMX backend.</p>
   <div class="hero-actions">
-    <a class="btn btn-primary" href="getting-started/">Get Started</a>
+    <a class="btn btn-primary" href="getting-started.html">Get Started</a>
     <a class="btn btn-secondary" href="https://github.com/jshaw/Canvas2DMX">GitHub</a>
   </div>
 </div>
@@ -85,7 +85,7 @@ void draw() {
 }
 ```
 
-[Full setup guide →](getting-started.md)
+[Full setup guide →](getting-started.html)
 
 <hr class="section-divider">
 
