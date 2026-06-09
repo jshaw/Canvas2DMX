@@ -3,7 +3,11 @@ build/
 release/canvas2dmx/
 release/*.zip
 release/*.pdex
+release/*.txt
 site/
+
+# macOS
+.DS_Store
 
 # Processing IDE generated files
 **/*.autosave

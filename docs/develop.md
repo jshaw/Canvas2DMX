@@ -92,7 +92,7 @@ You still get one-line lambda calls, and the library stays backend-agnostic.
 * [Getting Started](getting-started.md) — installation and first sketch
 * [Troubleshooting](troubleshooting.md) — common issues and fixes
 * [Develop](develop.md) — contributing and building from source
-* [Release](release.md) — packaging and Contribution Manager
+* [Release](release.md) — packaging and Processing Library Manager submission
 
 ---
 

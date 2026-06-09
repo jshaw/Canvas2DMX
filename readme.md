@@ -44,6 +44,7 @@ Inspired by [FadeCandy](https://github.com/scanlime/fadecandy) and [Open Pixel C
 2. Install Canvas2DMX into your Processing sketchbook libraries folder:
    - release zip: unzip to `<Sketchbook>/libraries/canvas2dmx`
    - from this repo: run `./gradlew deployToProcessingSketchbook`
+   - once accepted by Processing: install via the PDE Library Manager
 
 3. Restart Processing. The library will appear under **Sketch -> Import Library -> Canvas2DMX**.
 

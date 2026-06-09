@@ -252,6 +252,20 @@ tasks.register<Copy>("duplicateZipToPdex") {
 }
 tasks["duplicateZipToPdex"].mustRunAfter("packageRelease")
 
+tasks.register<Copy>("stageContributionArtifactsToDocs") {
+    group = "processing"
+    dependsOn("packageRelease", "duplicateZipToPdex")
+
+    doFirst {
+        println("Copy release zip/txt into docs/download ...")
+    }
+
+    from(releaseRoot) {
+        include("$libName.zip", "$libName.txt")
+    }
+    into("$rootDir/docs/download")
+}
+
 tasks.register("deployToProcessingSketchbook") {
     group = "processing"
     dependsOn("buildReleaseArtifacts")
