@@ -52,6 +52,7 @@ Canvas2DMX c2d;
 DmxP512 dmxPro;
 DMXControl dmxOpen;
 PGraphics ledBuffer;
+boolean dmxAvailable = false;
 
 void settings() {
   size(640, 360);
@@ -59,12 +60,7 @@ void settings() {
 }
 
 void setup() {
-  if (USE_ENTTEC_PRO) {
-    dmxPro = new DmxP512(this, DMX_UNIVERSE, false);
-    dmxPro.setupDmxPro(DMX_PORT, DMX_BAUDRATE);
-  } else {
-    dmxOpen = new DMXControl(0, DMX_UNIVERSE);
-  }
+  initDmx();
 
   ledBuffer = createGraphics(160, 90);
 
@@ -74,7 +70,8 @@ void setup() {
   c2d.setResponse(2.6);
   c2d.setCanvasSize(ledBuffer.width, ledBuffer.height);
   c2d.mapLedGrid(0, 12, 6, ledBuffer.width / 2f, ledBuffer.height / 2f, 10, 12, 0, true, false);
-  bootSequence();
+  if (dmxAvailable) bootSequence();
+  else println("No DMX device found — running OffscreenBuffer in preview-only mode.");
 }
 
 void draw() {
@@ -93,13 +90,14 @@ void draw() {
 
   fill(255);
   textSize(12);
-  String backend = USE_ENTTEC_PRO ? "ENTTEC Pro" : "Open DMX";
+  String backend = dmxAvailable ? (USE_ENTTEC_PRO ? "ENTTEC Pro" : "Open DMX") : "Preview only";
   text("OffscreenBuffer (" + backend + ") — mapping in 160x90, display scaled to window", 12, 14);
 
   sendDmx();
 }
 
 void bootSequence() {
+  if (!dmxAvailable) return;
   for (int i = 1; i <= 512; i++) {
     if (USE_ENTTEC_PRO) dmxPro.set(i + DMX_OFFSET - 1, 0);
     else dmxOpen.sendValue(i, 0);
@@ -119,10 +117,40 @@ void bootSequence() {
 }
 
 void sendDmx() {
+  if (!dmxAvailable) return;
   if (USE_ENTTEC_PRO) {
     c2d.sendToDmx(ledBuffer.pixels, (ch, val) -> dmxPro.set(ch + DMX_OFFSET - 1, val));
   } else {
     c2d.sendToDmx(ledBuffer.pixels, (ch, val) -> dmxOpen.sendValue(ch, val));
+  }
+}
+
+void initDmx() {
+  if (USE_ENTTEC_PRO) {
+    String[] ports = Serial.list();
+    boolean portFound = false;
+    for (String p : ports) {
+      if (p.equals(DMX_PORT)) { portFound = true; break; }
+    }
+    if (!portFound) {
+      println("DMX port \"" + DMX_PORT + "\" not found. Running preview-only.");
+      for (String p : ports) println("  " + p);
+      return;
+    }
+    try {
+      dmxPro = new DmxP512(this, DMX_UNIVERSE, false);
+      dmxPro.setupDmxPro(DMX_PORT, DMX_BAUDRATE);
+      dmxAvailable = true;
+    } catch (Exception e) {
+      println("Failed to open ENTTEC Pro: " + e.getMessage());
+    }
+  } else {
+    try {
+      dmxOpen = new DMXControl(0, DMX_UNIVERSE);
+      dmxAvailable = true;
+    } catch (Exception e) {
+      println("No Open DMX device found: " + e.getMessage());
+    }
   }
 }
 

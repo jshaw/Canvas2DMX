@@ -1,9 +1,9 @@
 # Canvas2DMX: Map Processing Canvases to DMX
 
-![Canvas2DMX demo image](docs/_img/canvas2DMX_screenshot.jpg)
+![Canvas2DMX demo image](docs/_img/canvas2DMX_screenshot_1.png)
 
 **Canvas2DMX** is a Processing library for mapping pixels from your sketch directly to DMX fixtures.  
-It lets you define LED mappings (strips, grids, rings, corners), apply color correction, and send data to any DMX backend (ENTTEC, SP201E, DMX4Artists, or your own).
+It lets you define LED mappings (strips, grids, rings, corners), apply color correction, and send data to any DMX backend or bridge (ENTTEC, DMX4Artists, OLA/Art-Net, SP201E translators, or your own).
 
 ### **Github Pages link: [Canvas2DMX](https://jshaw.github.io/Canvas2DMX/).**
 
@@ -23,13 +23,13 @@ Inspired by [FadeCandy](https://github.com/scanlime/fadecandy) and [Open Pixel C
 - Built-in **visualization** (color bars, LED markers)
 - **Agnostic DMX output**: works with DMX4Artists, ENTTEC, SP201E, or any controller via a simple callback
 - **Off-screen buffer support** via `setCanvasSize()` for PGraphics workflows
-- Ships with **five examples** from beginner sampling to polygon layout
+- Ships with **eight examples** from beginner sampling to hardware-specific backends
 
 ---
 
 ## 🎥 Demo Video
 
-[![Watch the demo](docs/_img/canvas2DMX_screenshot.jpg)](https://youtu.be/-gsM0a_rsXs?si=MXuY8Hiy-LBkyAh_)
+[![Watch the demo](docs/_img/canvas2DMX_screenshot_1.png)](https://youtu.be/-gsM0a_rsXs?si=MXuY8Hiy-LBkyAh_)
 
 > Click the thumbnail above to watch Canvas2DMX in action on YouTube.
 
@@ -37,13 +37,18 @@ Inspired by [FadeCandy](https://github.com/scanlime/fadecandy) and [Open Pixel C
 
 ## 📦 Installation
 
-1. Download the library release and unzip into your `Processing/libraries/` folder.  
-   (After publishing, you’ll be able to install via **Sketch → Import Library → Add Library…**)  
+1. Install the required Processing libraries via **Sketch -> Import Library -> Add Library...**:
+   - `dmxP512` for ENTTEC USB Pro devices
+   - `DMX4Artists` for FT232RL / Open DMX devices
 
-2. Restart Processing. The library will appear under **Sketch → Import Library → Canvas2DMX**.  
+2. Install Canvas2DMX into your Processing sketchbook libraries folder:
+   - release zip: unzip to `<Sketchbook>/libraries/canvas2dmx`
+   - from this repo: run `./gradlew deployToProcessingSketchbook`
 
-3. Explore the included examples via  
-   **File → Examples → Contributed Libraries → Canvas2DMX**.  
+3. Restart Processing. The library will appear under **Sketch -> Import Library -> Canvas2DMX**.
+
+4. Explore the included examples via  
+   **File -> Examples -> Contributed Libraries -> Canvas2DMX**.  
 
 ---
 
@@ -57,7 +62,7 @@ Two families of USB DMX dongle exist and they need different libraries. Every ex
 | **FT232RL "Open DMX"** — cheap USB cable, Amazon "USB to DMX 512", FreeStyler dongle | **DMX4Artists** | `false` |
 | **Any dongle via OLA** — Open Lighting Architecture as middleware | UDP/Art-Net | use `HardwareOLA` example |
 
-> Install both **dmxP512** and **DMX4Artists** via `Sketch → Import Library → Add Library` — all examples import both so both must be present to compile. You only use one at runtime.
+> Install both **dmxP512** and **DMX4Artists** via `Sketch -> Import Library -> Add Library` if you want to run the mixed-backend examples. `HardwareOpenDMX` and `HardwareOLA` are single-backend examples.
 
 ---
 
@@ -65,38 +70,17 @@ Two families of USB DMX dongle exist and they need different libraries. Every ex
 
 ```java
 import com.studiojordanshaw.canvas2dmx.*;
-import dmxP512.*;                    // for ENTTEC USB Pro  (install via Library Manager)
-import processing.serial.*;          // required by dmxP512
-import com.jaysonh.dmx4artists.*;   // for FT232RL cheap dongles  (install via Library Manager)
-
-// ── SET THESE FOR YOUR SETUP ──────────────────────────────────────────────
-boolean USE_ENTTEC_PRO      = true;   // true = ENTTEC Pro  |  false = FT232RL dongle
-String  DMX_PORT            = "/dev/cu.usbserial-XXXXXXXX"; // ENTTEC Pro port (Mac)
-int     DMX_BAUDRATE        = 115000; // ENTTEC Pro baud rate — do not change
-int     DMX_UNIVERSE        = 512;
-int     DMX_OFFSET          = 1;      // standard for ENTTEC Pro via dmxP512
-String  DMX_CHANNEL_PATTERN = "drgb"; // match your fixture's channel map
-// ─────────────────────────────────────────────────────────────────────────
 
 Canvas2DMX c2d;
-DmxP512    dmxPro;   // used when USE_ENTTEC_PRO = true
-DMXControl dmxOpen;  // used when USE_ENTTEC_PRO = false
 
 void setup() {
   size(400, 200);
-  pixelDensity(1); // important for accurate color sampling on HiDPI screens
-
-  if (USE_ENTTEC_PRO) {
-    dmxPro = new DmxP512(this, DMX_UNIVERSE, false);
-    dmxPro.setupDmxPro(DMX_PORT, DMX_BAUDRATE);
-  } else {
-    dmxOpen = new DMXControl(0, DMX_UNIVERSE); // 0 = first FT232RL device found
-  }
+  pixelDensity(1);
 
   c2d = new Canvas2DMX(this);
   c2d.mapLedStrip(0, 8, width/2f, height/2f, 40, 0, false);
-  c2d.setChannelPattern(DMX_CHANNEL_PATTERN);
-  c2d.setDefaultValue('d', 255); // dimmer full on
+  c2d.setChannelPattern("grb");
+  c2d.setDefaultValue('d', 255);
   c2d.setStartAt(1);
 }
 
@@ -108,18 +92,16 @@ void draw() {
   c2d.visualize(colors);
   c2d.showLedLocations();
 
-  sendDmx();
-}
-
-// Branches on USE_ENTTEC_PRO to call the right library
-void sendDmx() {
-  if (USE_ENTTEC_PRO) {
-    c2d.sendToDmx((ch, val) -> dmxPro.set(ch + DMX_OFFSET - 1, val));
-  } else {
-    c2d.sendToDmx((ch, val) -> dmxOpen.sendValue(ch, val));
-  }
+  // Replace this callback with your backend:
+  // dmx.sendValue(ch, val), artnet.writeUniverse(...), etc.
+  c2d.sendToDmx((ch, val) -> println("ch " + ch + " = " + val));
 }
 ```
+
+For hardware-specific setup, use the included examples:
+- `Basics`, `StripMapping`, `OffscreenBuffer`, `PolygonMapping`, `InteractiveDemo`, `ColorBandTest` for switchable ENTTEC Pro / Open DMX sketches
+- `HardwareOpenDMX` for DMX4Artists-only FT232RL output
+- `HardwareOLA` for OLA / Art-Net output
 
 ---
 
@@ -181,7 +163,7 @@ The library ships with examples, found in the Processing IDE under
 * **HardwareOpenDMX** — FT232RL dongle only, using DMX4Artists directly
 * **HardwareOLA** — any dongle via OLA middleware; sends Art-Net UDP to localhost
 
-All examples use the `USE_ENTTEC_PRO` flag — set it to `true` for ENTTEC Pro or `false` for FT232RL dongles.
+The general-purpose examples use the `USE_ENTTEC_PRO` flag — set it to `true` for ENTTEC Pro or `false` for FT232RL dongles. `HardwareOpenDMX` and `HardwareOLA` use dedicated backends instead.
 
 ---
 

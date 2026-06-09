@@ -8,7 +8,7 @@
 </div>
 
 <a class="demo-thumb" href="https://youtu.be/-gsM0a_rsXs?si=MXuY8Hiy-LBkyAh_">
-  <img class="hero-img" src="_img/canvas2DMX_screenshot.jpg" alt="Canvas2DMX in action">
+  <img class="hero-img" src="_img/canvas2DMX_screenshot_1.png" alt="Canvas2DMX in action">
 </a>
 
 <hr class="section-divider">
@@ -92,7 +92,7 @@ void draw() {
 <p class="section-label">Demo</p>
 
 <a class="demo-thumb" href="https://youtu.be/-gsM0a_rsXs?si=MXuY8Hiy-LBkyAh_">
-  <img src="_img/canvas2DMX_screenshot.jpg" alt="Watch the demo">
+  <img src="_img/canvas2DMX_screenshot_1.png" alt="Watch the demo">
 </a>
 
 <hr class="section-divider">

@@ -51,6 +51,7 @@ String DMX_CHANNEL_PATTERN = "drgbsc";
 Canvas2DMX c2d;
 DmxP512 dmxPro;
 DMXControl dmxOpen;
+boolean dmxAvailable = false;
 
 void settings() {
   size(320, 220);
@@ -58,12 +59,7 @@ void settings() {
 }
 
 void setup() {
-  if (USE_ENTTEC_PRO) {
-    dmxPro = new DmxP512(this, DMX_UNIVERSE, false);
-    dmxPro.setupDmxPro(DMX_PORT, DMX_BAUDRATE);
-  } else {
-    dmxOpen = new DMXControl(0, DMX_UNIVERSE);
-  }
+  initDmx();
 
   c2d = new Canvas2DMX(this);
   c2d.setChannelPattern(DMX_CHANNEL_PATTERN);
@@ -71,7 +67,8 @@ void setup() {
   c2d.setStartAt(1);
   c2d.setLed(0, width / 2, height / 2 - 10);
 
-  bootSequence();
+  if (dmxAvailable) bootSequence();
+  else println("No DMX device found — running Basics in preview-only mode.");
 }
 
 void draw() {
@@ -99,6 +96,7 @@ void draw() {
 // the strip is alive, then blacks out ready for the draw loop.
 // SP201E and similar translators hold their last state — this resets cleanly.
 void bootSequence() {
+  if (!dmxAvailable) return;
   // 1. Black — clear residual state
   for (int i = 1; i <= 512; i++) {
     if (USE_ENTTEC_PRO) dmxPro.set(i + DMX_OFFSET - 1, 0);
@@ -124,6 +122,7 @@ void bootSequence() {
 }
 
 void sendDmx() {
+  if (!dmxAvailable) return;
   if (USE_ENTTEC_PRO) {
     c2d.sendToDmx((ch, val) -> dmxPro.set(ch + DMX_OFFSET - 1, val));
   } else {
@@ -131,11 +130,40 @@ void sendDmx() {
   }
 }
 
+void initDmx() {
+  if (USE_ENTTEC_PRO) {
+    String[] ports = Serial.list();
+    boolean portFound = false;
+    for (String p : ports) {
+      if (p.equals(DMX_PORT)) { portFound = true; break; }
+    }
+    if (!portFound) {
+      println("DMX port \"" + DMX_PORT + "\" not found. Running preview-only.");
+      for (String p : ports) println("  " + p);
+      return;
+    }
+    try {
+      dmxPro = new DmxP512(this, DMX_UNIVERSE, false);
+      dmxPro.setupDmxPro(DMX_PORT, DMX_BAUDRATE);
+      dmxAvailable = true;
+    } catch (Exception e) {
+      println("Failed to open ENTTEC Pro: " + e.getMessage());
+    }
+  } else {
+    try {
+      dmxOpen = new DMXControl(0, DMX_UNIVERSE);
+      dmxAvailable = true;
+    } catch (Exception e) {
+      println("No Open DMX device found: " + e.getMessage());
+    }
+  }
+}
+
 void drawHud(int[] colors) {
   fill(255);
   textSize(12);
   textAlign(LEFT, TOP);
-  String backend = USE_ENTTEC_PRO ? "ENTTEC Pro" : "Open DMX";
+  String backend = dmxAvailable ? (USE_ENTTEC_PRO ? "ENTTEC Pro" : "Open DMX") : "Preview only";
   text("Basics — " + backend, 12, 10);
   text("Pattern: " + DMX_CHANNEL_PATTERN, 12, 28);
 

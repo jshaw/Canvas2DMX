@@ -54,6 +54,7 @@ Canvas2DMX c2d;
 DmxP512 dmxPro;
 DMXControl dmxOpen;
 PImage rainbow; // pre-built rainbow texture — scrolled each frame instead of redrawn
+boolean dmxAvailable = false;
 
 int ledCount = 16;
 boolean reversed = false;
@@ -65,12 +66,7 @@ void settings() {
 }
 
 void setup() {
-  if (USE_ENTTEC_PRO) {
-    dmxPro = new DmxP512(this, DMX_UNIVERSE, false);
-    dmxPro.setupDmxPro(DMX_PORT, DMX_BAUDRATE);
-  } else {
-    dmxOpen = new DMXControl(0, DMX_UNIVERSE);
-  }
+  initDmx();
 
   // Build a full-width rainbow image once — much faster than redrawing 520 lines per frame
   rainbow = createImage(width, height, RGB);
@@ -93,7 +89,8 @@ void setup() {
   //   No correction              : 1.0        (use with ColorBandTest to verify raw values)
   c2d.setResponse(2.6);
   remapStrip();
-  bootSequence();
+  if (dmxAvailable) bootSequence();
+  else println("No DMX device found — running StripMapping in preview-only mode.");
 }
 
 void draw() {
@@ -105,7 +102,7 @@ void draw() {
   colorMode(RGB, 255);
   fill(255);
   textSize(12);
-  String backend = USE_ENTTEC_PRO ? "ENTTEC Pro" : "Open DMX";
+  String backend = dmxAvailable ? (USE_ENTTEC_PRO ? "ENTTEC Pro" : "Open DMX") : "Preview only";
   text("StripMapping (" + backend + ") — R to reverse, [ ] to change LED count (" + ledCount + ")", 12, 12);
 
   int[] colors = c2d.getLedColors();
@@ -134,6 +131,7 @@ void drawLedMarkers(int[] colors) {
 // Clears any LEDs left on from a previous sketch, flashes white to confirm
 // the strip is alive, then blacks out ready for the draw loop.
 void bootSequence() {
+  if (!dmxAvailable) return;
   for (int i = 1; i <= 512; i++) {
     if (USE_ENTTEC_PRO) dmxPro.set(i + DMX_OFFSET - 1, 0);
     else dmxOpen.sendValue(i, 0);
@@ -153,6 +151,7 @@ void bootSequence() {
 }
 
 void sendDmx() {
+  if (!dmxAvailable) return;
   if (USE_ENTTEC_PRO) {
     // Build the complete frame first, then write it to dmxP512 in one tight loop.
     // This minimises the window where dmxP512's send timer can fire mid-update,
@@ -163,6 +162,35 @@ void sendDmx() {
     }
   } else {
     c2d.sendToDmx((ch, val) -> dmxOpen.sendValue(ch, val));
+  }
+}
+
+void initDmx() {
+  if (USE_ENTTEC_PRO) {
+    String[] ports = Serial.list();
+    boolean portFound = false;
+    for (String p : ports) {
+      if (p.equals(DMX_PORT)) { portFound = true; break; }
+    }
+    if (!portFound) {
+      println("DMX port \"" + DMX_PORT + "\" not found. Running preview-only.");
+      for (String p : ports) println("  " + p);
+      return;
+    }
+    try {
+      dmxPro = new DmxP512(this, DMX_UNIVERSE, false);
+      dmxPro.setupDmxPro(DMX_PORT, DMX_BAUDRATE);
+      dmxAvailable = true;
+    } catch (Exception e) {
+      println("Failed to open ENTTEC Pro: " + e.getMessage());
+    }
+  } else {
+    try {
+      dmxOpen = new DMXControl(0, DMX_UNIVERSE);
+      dmxAvailable = true;
+    } catch (Exception e) {
+      println("No Open DMX device found: " + e.getMessage());
+    }
   }
 }
 
