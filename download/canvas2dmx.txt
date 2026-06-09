@@ -1,0 +1,10 @@
+authors=[Jordan Shaw](https\://jordanshaw.com)
+categories=Hardware,I/O
+maxRevision=0
+minRevision=0
+name=Canvas2DMX
+paragraph=Supports LED strips, rings, grids, polygon fills, and custom layouts. Works with ENTTEC USB Pro, FT232RL Open DMX dongles, and any hardware routed through OLA (Open Lighting Architecture). Includes gamma correction, channel-pattern mapping, GRB chip support, and live visualization tools. macOS, Windows, and Linux supported.
+prettyVersion=0.0.1
+sentence=Maps pixels from your Processing sketch canvas directly to DMX lighting fixtures in real time.
+url=https\://jshaw.github.io/Canvas2DMX/
+version=1

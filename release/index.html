@@ -541,10 +541,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-optional-processing-contribution-manager" class="md-nav__link">
+  <a href="#5-submit-to-processing-library-manager" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5) Optional: Processing Contribution Manager
+        5) Submit to Processing Library Manager
       
     </span>
   </a>
@@ -701,10 +701,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-optional-processing-contribution-manager" class="md-nav__link">
+  <a href="#5-submit-to-processing-library-manager" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5) Optional: Processing Contribution Manager
+        5) Submit to Processing Library Manager
       
     </span>
   </a>
@@ -781,25 +781,36 @@
 <h2 id="1-bump-versions">1) Bump versions<a class="headerlink" href="#1-bump-versions" title="Permanent link">&para;</a></h2>
 <ul>
 <li>
-<p><code>build.gradle.kts</code>
-  <code>kotlin
-  version = "0.0.2"</code></p>
+<p><code>release.properties</code>
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="na">version</span><span class="o">=</span><span class="s">1</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="na">prettyVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0.0.1</span>
+</code></pre></div></p>
 </li>
 <li>
-<p><code>library.properties</code></p>
+<p>Re-generate <code>library.properties</code> during the release build.</p>
 </li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="na">version</span><span class="o">=</span><span class="s">0.0.2</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="na">prettyVersion</span><span class="o">=</span><span class="s">0.0.2</span>
-</code></pre></div>
-<p>(Optionally refresh <code>sentence</code>, <code>paragraph</code>, and <code>url</code> in <code>library.properties</code>.)</p>
+<p>Notes:
+- <code>version</code> is the Processing Library Manager update counter and must be an integer.
+- <code>prettyVersion</code> is the human-readable release version.
+- Refresh <code>sentence</code>, <code>paragraph</code>, and <code>url</code> in <code>release.properties</code> when needed.</p>
 <hr />
 <h2 id="2-build-package">2) Build &amp; package<a class="headerlink" href="#2-build-package" title="Permanent link">&para;</a></h2>
 <p>From repo root:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>./gradlew<span class="w"> </span>clean<span class="w"> </span>buildReleaseArtifacts<span class="w"> </span>packageRelease
 </code></pre></div>
+<p>This produces:</p>
+<ul>
+<li><code>release/canvas2dmx.zip</code> — the library package Processing expects</li>
+<li><code>release/canvas2dmx.txt</code> — a hosted copy of <code>library.properties</code> for Processing's aggregator</li>
+<li><code>release/canvas2dmx.pdex</code> — optional duplicate artifact</li>
+</ul>
+<p>To stage the hosted Processing submission files into GitHub Pages:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>./gradlew<span class="w"> </span>stageContributionArtifactsToDocs
+</code></pre></div>
+<p>That copies the latest <code>canvas2dmx.zip</code> and <code>canvas2dmx.txt</code> into <code>docs/download/</code>.</p>
 <p>Quick local install for testing:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>./gradlew<span class="w"> </span>deployToProcessingSketchbook
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>./gradlew<span class="w"> </span>deployToProcessingSketchbook
 </code></pre></div>
 <hr />
 <h2 id="3-smoke-test">3) Smoke test<a class="headerlink" href="#3-smoke-test" title="Permanent link">&para;</a></h2>
@@ -811,17 +822,54 @@
 </ol>
 <hr />
 <h2 id="4-publish-on-github">4) Publish on GitHub<a class="headerlink" href="#4-publish-on-github" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>git<span class="w"> </span>tag<span class="w"> </span>v0.0.2
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>v0.0.2
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>git<span class="w"> </span>tag<span class="w"> </span>v0.0.1
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>v0.0.1
 </code></pre></div>
 <ul>
-<li>Create a <strong>GitHub Release</strong> for <code>v0.0.2</code>.</li>
+<li>Create a <strong>GitHub Release</strong> for <code>v0.0.1</code>.</li>
 <li>Attach the built <strong>zip</strong> (the one that contains <code>library/</code>, <code>examples/</code>, <code>library.properties</code>).</li>
+<li>If you want GitHub Pages to host the Processing submission files, run:</li>
 </ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>./gradlew<span class="w"> </span>stageContributionArtifactsToDocs
+</code></pre></div>
+<p>and commit the updated <code>docs/download/</code> assets.</p>
 <hr />
-<h2 id="5-optional-processing-contribution-manager">5) Optional: Processing Contribution Manager<a class="headerlink" href="#5-optional-processing-contribution-manager" title="Permanent link">&para;</a></h2>
-<p>Ensure <code>library.properties</code> is complete (e.g., <code>name=canvas2dmx</code>, <code>categories=Hardware,I/O</code>, <code>authors=...</code>, <code>url=...</code>).
-Follow the Processing submission steps to have the zip listed in the Contribution Manager.</p>
+<h2 id="5-submit-to-processing-library-manager">5) Submit to Processing Library Manager<a class="headerlink" href="#5-submit-to-processing-library-manager" title="Permanent link">&para;</a></h2>
+<p>Processing's current library submission flow is based on hosting a <code>.zip</code> and matching <code>.txt</code> file at stable URLs, then emailing the Processing librarian.</p>
+<p>Checklist:</p>
+<ul>
+<li>Ensure <code>library.properties</code> is complete:</li>
+<li><code>name</code></li>
+<li><code>authors</code></li>
+<li><code>url</code></li>
+<li><code>categories</code></li>
+<li><code>sentence</code></li>
+<li><code>version</code></li>
+<li>Build the release package.</li>
+<li>Host these two files at stable public URLs:</li>
+<li><code>https://jshaw.github.io/Canvas2DMX/download/canvas2dmx.zip</code></li>
+<li><code>https://jshaw.github.io/Canvas2DMX/download/canvas2dmx.txt</code></li>
+<li>Email the <code>.txt</code> URL to <code>contributions@processing.org</code>.</li>
+</ul>
+<p>Suggested email:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Subject: Processing library submission: Canvas2DMX
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Hi Processing team,
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>I&#39;d like to submit Canvas2DMX for the Processing Library Manager.
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>Project URL:
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>https://github.com/jshaw/Canvas2DMX
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>Hosted library.properties (.txt):
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>https://jshaw.github.io/Canvas2DMX/download/canvas2dmx.txt
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>Hosted release zip:
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>https://jshaw.github.io/Canvas2DMX/download/canvas2dmx.zip
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>Thanks,
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>Jordan Shaw
+</code></pre></div>
 <hr />
 <h2 id="6-update-the-docs-github-pages">6) Update the docs (GitHub Pages)<a class="headerlink" href="#6-update-the-docs-github-pages" title="Permanent link">&para;</a></h2>
 <p>Your site is served from <code>/docs</code>.</p>
@@ -836,9 +884,9 @@ Follow the Processing submission steps to have the zip listed in the Contributio
 <li>Image: <code>![Canvas2DMX demo](_img/hero.png)</code></li>
 <li>YouTube:</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">&lt;</span><span class="nt">iframe</span> <span class="na">width</span><span class="o">=</span><span class="s">&quot;560&quot;</span> <span class="na">height</span><span class="o">=</span><span class="s">&quot;315&quot;</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  <span class="na">src</span><span class="o">=</span><span class="s">&quot;https://www.youtube.com/embed/VIDEO_ID&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  <span class="na">title</span><span class="o">=</span><span class="s">&quot;Canvas2DMX demo&quot;</span> <span class="na">frameborder</span><span class="o">=</span><span class="s">&quot;0&quot;</span> <span class="na">allowfullscreen</span><span class="p">&gt;&lt;/</span><span class="nt">iframe</span><span class="p">&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">&lt;</span><span class="nt">iframe</span> <span class="na">width</span><span class="o">=</span><span class="s">&quot;560&quot;</span> <span class="na">height</span><span class="o">=</span><span class="s">&quot;315&quot;</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  <span class="na">src</span><span class="o">=</span><span class="s">&quot;https://www.youtube.com/embed/VIDEO_ID&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  <span class="na">title</span><span class="o">=</span><span class="s">&quot;Canvas2DMX demo&quot;</span> <span class="na">frameborder</span><span class="o">=</span><span class="s">&quot;0&quot;</span> <span class="na">allowfullscreen</span><span class="p">&gt;&lt;/</span><span class="nt">iframe</span><span class="p">&gt;</span>
 </code></pre></div>
 <hr />
 <h2 id="7-post-release-checklist">7) Post-release checklist<a class="headerlink" href="#7-post-release-checklist" title="Permanent link">&para;</a></h2>
@@ -847,7 +895,9 @@ Follow the Processing submission steps to have the zip listed in the Contributio
 <li>[ ] Docs updated (if API changed)</li>
 <li>[ ] Examples launch cleanly in Processing</li>
 <li>[ ] GitHub Release has the zip attached</li>
-<li>[ ] Submitted to Contribution Manager</li>
+<li>[ ] <code>docs/download/canvas2dmx.zip</code> updated</li>
+<li>[ ] <code>docs/download/canvas2dmx.txt</code> updated</li>
+<li>[ ] Submission email sent to <code>contributions@processing.org</code></li>
 </ul>
 <hr />
 <h2 id="learn-more">📚 Learn More<a class="headerlink" href="#learn-more" title="Permanent link">&para;</a></h2>
@@ -856,7 +906,7 @@ Follow the Processing submission steps to have the zip listed in the Contributio
 <li><a href="../getting-started/">Getting Started</a> — installation and first sketch</li>
 <li><a href="../troubleshooting/">Troubleshooting</a> — common issues and fixes</li>
 <li><a href="../develop/">Develop</a> — contributing and building from source</li>
-<li><a href="./">Release</a> — packaging and Contribution Manager</li>
+<li><a href="./">Release</a> — packaging and Processing Library Manager submission</li>
 </ul>
 <hr />
 <h2 id="license">📜 License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h2>
