@@ -29,7 +29,7 @@ Inspired by [FadeCandy](https://github.com/scanlime/fadecandy) and [Open Pixel C
 
 ## 🎥 Demo Video
 
-[![Watch the demo](docs/_img/canvas2DMX_screenshot_1.png)](https://youtu.be/-gsM0a_rsXs?si=MXuY8Hiy-LBkyAh_)
+[![Watch the demo](docs/_img/canvas2DMX_screenshot_1.png)](https://youtu.be/0m3r0fV0ln4)
 
 > Click the thumbnail above to watch Canvas2DMX in action on YouTube.
 
